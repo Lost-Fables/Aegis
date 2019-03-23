@@ -1,0 +1,4 @@
+name: Aegis
+version: ${project.version}
+main: net.lordofthecraft.aegis.Aegis
+author: Tofuus
