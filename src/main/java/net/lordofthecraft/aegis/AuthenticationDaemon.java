@@ -1,21 +1,28 @@
 package net.lordofthecraft.aegis;
 
+import com.google.common.io.Files;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
 
 public class AuthenticationDaemon {
 
     private Aegis plugin;
     private Set<UUID> awaitingAuthentication;
-    private HashMap<UUID, AegisUser> cachedUsers;
+    private HashMap<UUID, AegisUser> users;
     private ServerInfo limboServer;
 
     public AuthenticationDaemon(Aegis plugin) {
         this.plugin = plugin;
+        loadUsers();
     }
 
     public boolean isAuthenticated(UUID uuid) {
@@ -37,11 +44,32 @@ public class AuthenticationDaemon {
     public void createAuthentication(ProxiedPlayer player) {
         final GoogleAuthenticatorKey key = plugin.gAuth.createCredentials();
         AegisUser  aegisUser = new AegisUser(player, key.getKey(), key.getScratchCodes());
-        cachedUsers.put(player.getUniqueId(), aegisUser);
+        users.put(player.getUniqueId(), aegisUser);
     }
 
     public AegisUser getUser(UUID uuid) {
-        //TODO:
+        return users.get(uuid);
+    }
+
+
+    public void loadUsers() {
+        File folder = new File(plugin.getDataFolder() + File.separator + "users");
+        folder.mkdirs();
+
+        for (File userFile : folder.listFiles()) {
+            if (Files.getFileExtension(userFile.getName()).equals("yml")) {
+                try {
+                    Configuration config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(userFile);
+                    users.put(UUID.fromString(config.getString("uuid")), new AegisUser(config));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void setupUser(ProxiedPlayer player) {
+
     }
 
 }
