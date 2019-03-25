@@ -1,7 +1,9 @@
 package net.lordofthecraft.aegis;
 
 import co.aikar.commands.BungeeCommandManager;
+import com.google.common.collect.ImmutableMap;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
+import de.exceptionflug.protocolize.api.protocol.ProtocolAPI;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,6 +73,6 @@ public final class Aegis extends Plugin {
     }
 
     public void registerPacket() {
-
+        ProtocolAPI.getPacketRegistration().registerPlayClientPacket(MapData.class, ImmutableMap.of(404, 0x26));
     }
 }

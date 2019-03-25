@@ -1,5 +1,7 @@
 package net.lordofthecraft.aegis;
 
+import com.flowpowered.nbt.CompoundTag;
+import com.flowpowered.nbt.IntTag;
 import com.google.common.io.Files;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 import de.exceptionflug.protocolize.items.InventoryManager;
@@ -78,11 +80,14 @@ public class AuthenticationDaemon {
     }
 
     private void sendMap(ProxiedPlayer player) {
+        player.unsafe().sendPacket(new MapData()); //TODO: fill out map data
+
         final PlayerInventory inventory = InventoryManager.getInventory(player.getUniqueId());
 
         final ItemStack map = new ItemStack(ItemType.FILLED_MAP);
-        map.setNBTTag(); // Set the map data
-        inventory.setItem(0, map);
+        CompoundTag compoundTag = (CompoundTag) map.getNBTTag();
+        compoundTag.getValue().put("tag", new IntTag("map", 1));
+        map.setNBTTag(compoundTag);
 
         inventory.update();
     }
