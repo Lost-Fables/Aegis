@@ -2,6 +2,10 @@ package net.lordofthecraft.aegis;
 
 import com.google.common.io.Files;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
+import de.exceptionflug.protocolize.items.InventoryManager;
+import de.exceptionflug.protocolize.items.ItemStack;
+import de.exceptionflug.protocolize.items.ItemType;
+import de.exceptionflug.protocolize.items.PlayerInventory;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -70,6 +74,16 @@ public class AuthenticationDaemon {
 
     public void setupUser(ProxiedPlayer player) {
 
+        sendMap(player);
     }
 
+    private void sendMap(ProxiedPlayer player) {
+        final PlayerInventory inventory = InventoryManager.getInventory(player.getUniqueId());
+
+        final ItemStack map = new ItemStack(ItemType.FILLED_MAP);
+        map.setNBTTag(); // Set the map data
+        inventory.setItem(0, map);
+
+        inventory.update();
+    }
 }

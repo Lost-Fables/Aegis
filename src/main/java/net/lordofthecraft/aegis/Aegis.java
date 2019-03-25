@@ -20,6 +20,8 @@ public final class Aegis extends Plugin {
 
     @Override
     public void onEnable() {
+        registerPacket();
+
         generateDefaultConfig();
         loadConfig();
         gAuth = new GoogleAuthenticator();
@@ -66,5 +68,9 @@ public final class Aegis extends Plugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void registerPacket() {
+
     }
 }
