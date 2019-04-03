@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
@@ -57,13 +58,43 @@ public class MapData extends AbstractPacket {
     
     @Override
     public void read(ByteBuf buf){
+    	mapID = readVarInt(buf);
+    	scale = buf.readByte();
+    	trackingPosition = buf.readBoolean();
     	
+    	int howManyIcons = readVarInt(buf);
+    	this.icons = new Icon[howManyIcons];
+    	for(int i = 0; i < howManyIcons; i++) {
+    		Icon icon = new Icon();
+    		
+    		icon.type = readVarInt(buf);
+    		icon.x = buf.readByte();
+    		icon.z = buf.readByte();
+    		icon.direction = buf.readByte();
+    		icon.hasDisplayName = buf.readBoolean();
+    		if(icon.hasDisplayName) {
+    			String json = readString(buf);
+    			BaseComponent[] cs = ComponentSerializer.parse(json);
+    			icon.displayName = new TextComponent(cs).toLegacyText();
+    		}
+    			
+    		icons[i] = icon;
+    	}
+    	
+    	columns = buf.readByte();
+    	if(columns > 0) {
+    		rows = buf.readByte();
+    		xOffset = buf.readByte();
+    		zOffset = buf.readByte();
+    		
+    	}
     }
-    
     
 
     @Override
     public void write(ByteBuf buf) {
+    	validate();
+    	
     	writeVarInt(mapID, buf);
     	buf.writeByte(scale);
     	buf.writeBoolean(trackingPosition);
@@ -87,8 +118,11 @@ public class MapData extends AbstractPacket {
     		buf.writeByte(this.zOffset);
     		writeVarInt(mapData.length, buf);
     		buf.writeBytes(mapData);
+    		int dataLength = readVarInt(buf);
+    		if(dataLength > 0 ) {
+    			mapData = new byte[dataLength];
+    			buf.readBytes(mapData);
+    		}
     	}
-    	
-    	
     }
 }
