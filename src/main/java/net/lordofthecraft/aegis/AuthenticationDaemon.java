@@ -97,7 +97,7 @@ public class AuthenticationDaemon {
 
         final ItemStack map = new ItemStack(ItemType.FILLED_MAP);
         CompoundTag compoundTag = (CompoundTag) map.getNBTTag();
-        compoundTag.getValue().put("tag", new IntTag("map", 1));
+        compoundTag.getValue().put("tag", new IntTag("map", AUTHENTHICATION_MAP_ID));
         map.setNBTTag(compoundTag);
 
         inventory.update();
