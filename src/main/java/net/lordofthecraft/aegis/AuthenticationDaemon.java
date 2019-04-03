@@ -80,14 +80,15 @@ public class AuthenticationDaemon {
         sendMap(player);
     }
 
-    private byte[] getQRCode() {
-        return new byte[128*128]; //TODO
+    private byte[] getQRCode(ProxiedPlayer pp, String secret, String topbar) {
+        return new QRRenderer(pp.getName(), secret, topbar).render();
     }
     
     private void sendMap(ProxiedPlayer player) {
         
-
-        MapData md = new MapData(AUTHENTHICATION_MAP_ID, (byte) 0, false, new MapData.Icon[0], (byte) 128, (byte) 128, (byte) 0, (byte) 0, getQRCode());
+        byte[] data = getQRCode(player, "idk", "idk");//TODO
+        MapData md = new MapData(AUTHENTHICATION_MAP_ID, (byte) 0, false, new MapData.Icon[0],
+                (byte) 128, (byte) 128, (byte) 0, (byte) 0, data);
         player.unsafe().sendPacket(md);
 
         final PlayerInventory inventory = InventoryManager.getInventory(player.getUniqueId());
