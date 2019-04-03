@@ -20,7 +20,8 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 public class AuthenticationDaemon {
-
+    public static final int AUTHENTHICATION_MAP_ID = 1337;
+    
     private Aegis plugin;
     private Set<UUID> awaitingAuthentication;
     private HashMap<UUID, AegisUser> users;
@@ -79,8 +80,15 @@ public class AuthenticationDaemon {
         sendMap(player);
     }
 
+    private byte[] getQRCode() {
+        return new byte[128*128]; //TODO
+    }
+    
     private void sendMap(ProxiedPlayer player) {
-        player.unsafe().sendPacket(new MapData()); //TODO: fill out map data
+        
+
+        MapData md = new MapData(AUTHENTHICATION_MAP_ID, (byte) 0, false, new MapData.Icon[0], (byte) 128, (byte) 128, (byte) 0, (byte) 0, getQRCode());
+        player.unsafe().sendPacket(md);
 
         final PlayerInventory inventory = InventoryManager.getInventory(player.getUniqueId());
 
