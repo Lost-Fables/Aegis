@@ -1,31 +1,21 @@
 package net.lordofthecraft.aegis;
 
-import static net.md_5.bungee.api.ChatColor.AQUA;
-import static net.md_5.bungee.api.ChatColor.RED;
-import static net.md_5.bungee.api.ChatColor.WHITE;
-
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Dependency;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Subcommand;
+import co.lotc.core.command.CommandTemplate;
+import co.lotc.core.command.annotate.Cmd;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-@CommandAlias("auth")
-public class AegisCommands extends BaseCommand {
+import static net.md_5.bungee.api.ChatColor.*;
 
+public class AegisCommands extends CommandTemplate {
 
-    @Dependency
     private Aegis plugin;
+    public AegisCommands(Aegis plugin) {
+        this.plugin = plugin;
+    }
 
-
-    @Default
-    @Description("Use to authenticate yourself")
-    @CommandPermission("aegis.auth")
-    public void auth(ProxiedPlayer player, Integer authCode) {
+    @Cmd(value = "Authenticate user using a ToTP", permission = "auth.use")
+    public void auth(ProxiedPlayer player, int authCode) {
         if (!plugin.daemon.isAuthenticated(player.getUniqueId())) {
             player.sendMessage(new ComponentBuilder("Error: ").color(RED).append("You're already authenticated").color(WHITE).create());
             return;
@@ -38,7 +28,7 @@ public class AegisCommands extends BaseCommand {
         }
     }
 
-    @Subcommand("setup")
+    @Cmd(value = "Setup 2fa", permission = "auth.use")
     public void setup(ProxiedPlayer player) {
         if (!plugin.daemon.isAuthenticated(player.getUniqueId())) {
             player.sendMessage(new ComponentBuilder("Error: ").color(RED)

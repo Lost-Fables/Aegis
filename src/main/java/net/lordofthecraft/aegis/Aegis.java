@@ -1,21 +1,23 @@
 package net.lordofthecraft.aegis;
 
-import co.aikar.commands.BungeeCommandManager;
+import co.lotc.core.bungee.command.BungeeCommandData;
+import co.lotc.core.bungee.command.Commands;
 import com.google.common.collect.ImmutableMap;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import de.exceptionflug.protocolize.api.protocol.ProtocolAPI;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
+
 public final class Aegis extends Plugin {
 
-    BungeeCommandManager commandManager;
     AuthenticationDaemon daemon;
     GoogleAuthenticator gAuth;
     Configuration config;
@@ -28,9 +30,7 @@ public final class Aegis extends Plugin {
         loadConfig();
         gAuth = new GoogleAuthenticator();
 
-        commandManager = new BungeeCommandManager(this);
-        commandManager.registerCommand(new AegisCommands());
-        commandManager.registerDependency(Aegis.class, "plugin", this);
+        Commands.build(new BungeeCommandData(this, "auth", "auth.use", "ToTP authentication for bungee", new ArrayList<>()), () -> new AegisCommands(this));
 
         getProxy().getPluginManager().registerListener(this, new Events(this));
         daemon = new AuthenticationDaemon(this);
