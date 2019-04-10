@@ -32,7 +32,7 @@ public class AuthenticationDaemon {
         this.plugin = plugin;
         loadUsers();
         awaitingAuthentication = new HashSet<>();
-        users = new HashMap<>(); //TODO Properly instantiate this with values from config
+        users = new HashMap<>();
 
         lowSecurityServers = plugin.getConfig().getStringList("lowSecurityServer");
     }

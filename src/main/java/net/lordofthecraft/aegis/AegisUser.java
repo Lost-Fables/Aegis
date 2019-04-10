@@ -1,10 +1,11 @@
 package net.lordofthecraft.aegis;
 
-import java.util.List;
-import java.util.UUID;
 import lombok.Getter;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
+
+import java.util.List;
+import java.util.UUID;
 
 @Getter
 public class AegisUser {
@@ -22,6 +23,7 @@ public class AegisUser {
         this.scratchCodes = scratchCodes;
         lastAuthenticated = System.currentTimeMillis();
         lastIP = player.getAddress().getAddress().getHostAddress();
+
     }
 
     public AegisUser(Configuration config) {

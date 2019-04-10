@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableMap;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import de.exceptionflug.protocolize.api.protocol.ProtocolAPI;
 import lombok.Getter;
+import net.lordofthecraft.aegis.cmd.AegisCommands;
+import net.lordofthecraft.aegis.cmd.AuthCommands;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -32,7 +34,8 @@ public final class Aegis extends Plugin {
         loadConfig();
         gAuth = new GoogleAuthenticator();
 
-        Commands.build(new BungeeCommandData(this, "auth", "auth.use", "ToTP authentication for bungee", new ArrayList<>()), () -> new AegisCommands(this));
+        Commands.build(new BungeeCommandData(this, "auth", "auth.use", "ToTP authentication for bungee", new ArrayList<>()), () -> new AuthCommands(this));
+        Commands.build(new BungeeCommandData(this, "aegis", "aegis.use", "Administration commands for Aegis", new ArrayList<>()), AegisCommands::new);
 
         getProxy().getPluginManager().registerListener(this, new Events(this));
         daemon = new AuthenticationDaemon(this);
