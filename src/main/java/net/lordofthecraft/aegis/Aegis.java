@@ -5,6 +5,7 @@ import co.lotc.core.bungee.command.Commands;
 import com.google.common.collect.ImmutableMap;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import de.exceptionflug.protocolize.api.protocol.ProtocolAPI;
+import de.exceptionflug.protocolize.api.util.ProtocolVersions;
 import lombok.Getter;
 import net.lordofthecraft.aegis.cmd.AegisCommands;
 import net.lordofthecraft.aegis.cmd.AuthCommands;
@@ -83,6 +84,6 @@ public final class Aegis extends Plugin {
     }
 
     public void registerPacket() {
-        ProtocolAPI.getPacketRegistration().registerPlayClientPacket(MapData.class, ImmutableMap.of(404, 0x26));
+        ProtocolAPI.getPacketRegistration().registerPlayClientPacket(MapData.class, ImmutableMap.of(ProtocolVersions.MINECRAFT_1_13_2, 0x26));
     }
 }

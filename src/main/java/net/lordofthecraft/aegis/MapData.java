@@ -86,7 +86,11 @@ public class MapData extends AbstractPacket {
       rows = buf.readByte();
       xOffset = buf.readByte();
       zOffset = buf.readByte();
-
+      int dataLength = readVarInt(buf);
+      if(dataLength > 0 ) {
+        mapData = new byte[dataLength];
+        buf.readBytes(mapData);
+      }
     }
   }
 
@@ -118,11 +122,6 @@ public class MapData extends AbstractPacket {
       buf.writeByte(this.zOffset);
       writeVarInt(mapData.length, buf);
       buf.writeBytes(mapData);
-      int dataLength = readVarInt(buf);
-      if(dataLength > 0 ) {
-        mapData = new byte[dataLength];
-        buf.readBytes(mapData);
-      }
     }
   }
 }
