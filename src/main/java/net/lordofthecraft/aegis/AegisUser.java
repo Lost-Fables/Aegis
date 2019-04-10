@@ -30,7 +30,7 @@ public class AegisUser {
         lastAuthenticated = System.currentTimeMillis();
         lastKnownIPs = new HashMap<>();
         lastKnownIPs.put(player.getAddress().getAddress().getHostAddress(), System.currentTimeMillis());
-
+        save();
     }
 
     public AegisUser(Configuration config) {
