@@ -31,11 +31,20 @@ public class AegisUser {
         lastKnownIPs = new HashMap<>();
         lastKnownIPs.put(player.getAddress().getAddress().getHostAddress(), System.currentTimeMillis());
 
+
+        File file = new File(Aegis.INSTANCE.getDataFolder() + File.separator + "users", uuid + ".yml");
+        try {
+            file.createNewFile();
+            config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        save();
     }
 
     public AegisUser(Configuration config) {
-        load();
         this.config = config;
+        load();
     }
 
     public void save() {
@@ -44,11 +53,11 @@ public class AegisUser {
         config.set("scratchCodes", scratchCodes);
         config.set("lastAuthenticated", lastAuthenticated);
         for (Map.Entry<String, Long> entry : lastKnownIPs.entrySet()) {
-            config.set("ip." + entry.getKey(), entry.getValue());
+            config.set("ip." + entry.getKey().replaceAll("\\.", "-"), entry.getValue());
         }
 
         try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, new File(Aegis.INSTANCE.getDataFolder(), uuid + ".yml"));
+            ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, new File(Aegis.INSTANCE.getDataFolder() + File.separator + "users", uuid + ".yml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,7 +69,7 @@ public class AegisUser {
         scratchCodes = config.getIntList("scratchCodes");
         lastAuthenticated = config.getLong("lastAuthenticated");
         lastKnownIPs = new HashMap<>();
-        config.getSection("ip").getKeys().forEach(ip -> lastKnownIPs.put(ip, config.getLong("ip." + ip)));
+        config.getSection("ip").getKeys().forEach(ip -> lastKnownIPs.put(ip.replaceAll("-", "."), config.getLong("ip." + ip)));
     }
 
     public boolean isRecentIP(String ip) {

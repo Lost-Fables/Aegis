@@ -12,19 +12,14 @@ public class QRRenderer{
     private static final byte WHITE = (byte) 8;
 
     private BitMatrix bitMatrix = null;
-    private String secret;
 
     public QRRenderer(String username, String secret, String topbar) {
         bitMatrix = getQRMap(username, secret, topbar);
-        this.secret = secret;
     }
     
 
     public byte[] render() {
         byte[] bytes = new byte[128*128];
-        
-        //if (bitMatrix == null)
-        //    return bytes;
         for (int x = 0; x < 128; x++) {
             for (int y = 0; y < 128; y++) {
                 int index = x*128 + y;

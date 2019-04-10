@@ -29,7 +29,7 @@ public class Events implements Listener {
 
         Title title = ProxyServer.getInstance().createTitle();
         title.title(new ComponentBuilder("Authenticate with ").append(" /auth").color(ChatColor.RED).create());
-        title.stay(5);
+        title.stay(50);
         event.getPlayer().sendTitle(title);
 
         ServerInfo lowSecurityServer = plugin.getDaemon().getLowSecurityServer();
@@ -37,7 +37,15 @@ public class Events implements Listener {
             plugin.getLogger().warning("None of the low security servers are online!");
             return;
         }
+
+        if (event.getReason() == ServerConnectEvent.Reason.COMMAND || event.getReason() == ServerConnectEvent.Reason.PLUGIN || event.getReason() == ServerConnectEvent.Reason.PLUGIN_MESSAGE) {
+            event.setCancelled(true);
+            return;
+        }
         event.setTarget(lowSecurityServer);
 
     }
+
+    //TODO: Cancel proxy level commands
+    // TODO: Check login events and have people authenticate if  1) haven't authenticated for a while 2) IP isn't logged in the last 5 IPs. Maybe make this part configurable
 }
