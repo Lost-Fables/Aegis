@@ -89,7 +89,7 @@ public class AuthenticationDaemon {
     }
 
     public void setupUser(ProxiedPlayer player) {
-
+        createAuthentication(player);
         sendMap(player);
     }
 
