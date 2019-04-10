@@ -24,7 +24,7 @@ public class AuthenticationDaemon {
     
     private Aegis plugin;
     private Set<UUID> awaitingAuthentication;
-    private HashMap<UUID, AegisUser> users;
+    private Map<UUID, AegisUser> users;
     @Getter
     private List<String> lowSecurityServers;
 
@@ -32,6 +32,7 @@ public class AuthenticationDaemon {
         this.plugin = plugin;
         loadUsers();
         awaitingAuthentication = new HashSet<>();
+        users = new HashMap<>(); //TODO Properly instantiate this with values from config
 
         lowSecurityServers = plugin.getConfig().getStringList("lowSecurityServer");
     }
