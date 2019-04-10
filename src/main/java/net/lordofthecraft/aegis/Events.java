@@ -45,4 +45,7 @@ public class Events implements Listener {
         event.setTarget(lowSecurityServer);
 
     }
+
+    //TODO: Cancel proxy level commands
+    // TODO: Check login events and have people authenticate if  1) haven't authenticated for a while 2) IP isn't logged in the last 5 IPs. Maybe make this part configurable
 }

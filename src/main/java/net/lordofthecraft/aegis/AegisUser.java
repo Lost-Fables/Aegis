@@ -43,8 +43,8 @@ public class AegisUser {
     }
 
     public AegisUser(Configuration config) {
-        load();
         this.config = config;
+        load();
     }
 
     public void save() {
