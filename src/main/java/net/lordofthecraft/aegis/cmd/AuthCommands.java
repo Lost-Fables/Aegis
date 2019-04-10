@@ -13,8 +13,7 @@ public class AuthCommands extends CommandTemplate {
         this.plugin = plugin;
     }
 
-    @Cmd(value = "Authenticate user using a ToTP", permission = "auth.use")
-    public void auth(ProxiedPlayer player, int authCode) {
+    public void invoke(ProxiedPlayer player, int authCode) {
         validate(plugin.getDaemon().hasUser(player.getUniqueId()), "You don't have two factor authentication setup");
         validate(!plugin.getDaemon().isAuthenticated(player.getUniqueId()), "You're already authenticated");
 
@@ -23,13 +22,13 @@ public class AuthCommands extends CommandTemplate {
         if (plugin.getGAuth().authorize(user.getSecretKey(), authCode)) {
 
         } else {
-
+            // TODO: Implement scratch codes. Should instantly have them setup a new totp
         }
     }
 
     @Cmd(value = "Setup 2fa", permission = "auth.use")
     public void setup(ProxiedPlayer player) {
-        validate(!plugin.getDaemon().isAuthenticated(player.getUniqueId()), "You're already authenticated");
+        validate(!plugin.getDaemon().hasUser(player.getUniqueId()), "You already have two factor authentication setup. Do '/auth disable' to remove it");
         plugin.getDaemon().setupUser(player);
     }
 
