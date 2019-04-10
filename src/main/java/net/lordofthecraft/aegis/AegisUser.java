@@ -30,6 +30,15 @@ public class AegisUser {
         lastAuthenticated = System.currentTimeMillis();
         lastKnownIPs = new HashMap<>();
         lastKnownIPs.put(player.getAddress().getAddress().getHostAddress(), System.currentTimeMillis());
+
+
+        File file = new File(Aegis.INSTANCE.getDataFolder(), uuid + ".yml");
+        try {
+            file.createNewFile();
+            config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         save();
     }
 
