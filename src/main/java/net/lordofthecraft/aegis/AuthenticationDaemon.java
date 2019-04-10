@@ -115,4 +115,8 @@ public class AuthenticationDaemon {
 
         inventory.update();
     }
+
+    public void saveUsers() {
+        users.values().forEach(AegisUser::save);
+    }
 }

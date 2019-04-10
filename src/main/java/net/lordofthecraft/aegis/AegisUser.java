@@ -3,7 +3,11 @@ package net.lordofthecraft.aegis;
 import lombok.Getter;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +45,12 @@ public class AegisUser {
         config.set("lastAuthenticated", lastAuthenticated);
         for (Map.Entry<String, Long> entry : lastKnownIPs.entrySet()) {
             config.set("ip." + entry.getKey(), entry.getValue());
+        }
+
+        try {
+            ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, new File(Aegis.INSTANCE.getDataFolder(), uuid + ".yml"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

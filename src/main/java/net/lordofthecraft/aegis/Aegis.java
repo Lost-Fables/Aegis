@@ -22,12 +22,15 @@ import java.util.ArrayList;
 @Getter
 public final class Aegis extends Plugin {
 
+    public static Aegis INSTANCE;
+
     AuthenticationDaemon daemon;
     GoogleAuthenticator gAuth;
     Configuration config;
 
     @Override
     public void onEnable() {
+        INSTANCE = this;
         registerPacket();
 
         generateDefaultConfig();
@@ -43,6 +46,8 @@ public final class Aegis extends Plugin {
 
     @Override
     public void onDisable() {
+        daemon.saveUsers();
+        saveConfig();
     }
 
     private void generateDefaultConfig() {
