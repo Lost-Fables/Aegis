@@ -5,6 +5,7 @@ import co.lotc.core.bungee.command.Commands;
 import com.google.common.collect.ImmutableMap;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import de.exceptionflug.protocolize.api.protocol.ProtocolAPI;
+import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 
+@Getter
 public final class Aegis extends Plugin {
 
     AuthenticationDaemon daemon;

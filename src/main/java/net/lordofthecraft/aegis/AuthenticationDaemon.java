@@ -8,16 +8,16 @@ import de.exceptionflug.protocolize.items.InventoryManager;
 import de.exceptionflug.protocolize.items.ItemStack;
 import de.exceptionflug.protocolize.items.ItemType;
 import de.exceptionflug.protocolize.items.PlayerInventory;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.UUID;
+import lombok.Getter;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 public class AuthenticationDaemon {
     public static final int AUTHENTHICATION_MAP_ID = 1337;
@@ -25,27 +25,36 @@ public class AuthenticationDaemon {
     private Aegis plugin;
     private Set<UUID> awaitingAuthentication;
     private HashMap<UUID, AegisUser> users;
-    private ServerInfo limboServer;
+    @Getter
+    private List<String> lowSecurityServers;
 
     public AuthenticationDaemon(Aegis plugin) {
         this.plugin = plugin;
         loadUsers();
+        awaitingAuthentication = new HashSet<>();
+
+        lowSecurityServers = plugin.getConfig().getStringList("lowSecurityServer");
     }
 
     public boolean isAuthenticated(UUID uuid) {
         return !awaitingAuthentication.contains(uuid);
     }
 
-    public boolean isLimboServer(ServerInfo server) {
-        return limboServer.equals(server);
+    public ServerInfo getLowSecurityServer() {
+        for (Map.Entry<String, ServerInfo> servers : plugin.getProxy().getServers().entrySet()) {
+            if (lowSecurityServers.contains(servers.getKey())) {
+                return servers.getValue();
+            }
+        }
+        return null;
     }
 
-    public boolean isLimboServer(String name) {
-        return limboServer.getName().equalsIgnoreCase(name);
+    public boolean isLowSecurityServer(String name) {
+        return lowSecurityServers.contains(name);
     }
 
-    public ServerInfo getLimboServer() {
-        return limboServer;
+    public boolean isLowSecurityServer(ServerInfo server) {
+        return isLowSecurityServer(server.getName());
     }
 
     public void createAuthentication(ProxiedPlayer player) {
