@@ -17,7 +17,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    void onProxyChange(ServerConnectEvent event) {
+    public void onProxyChange(ServerConnectEvent event) {
         if (plugin.daemon.isLimboServer(event.getTarget())) {
             return;
         }
