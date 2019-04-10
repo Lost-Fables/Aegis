@@ -4,7 +4,9 @@ import lombok.Getter;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Getter
@@ -14,7 +16,7 @@ public class AegisUser {
     private String secretKey;
     private List<Integer> scratchCodes;
     private long lastAuthenticated;
-    private String lastIP;
+    private Map<String, Long> lastKnownIPs;
     private Configuration config;
 
     public AegisUser(ProxiedPlayer player, String secretKey, List<Integer> scratchCodes) {
@@ -22,7 +24,8 @@ public class AegisUser {
         this.secretKey = secretKey;
         this.scratchCodes = scratchCodes;
         lastAuthenticated = System.currentTimeMillis();
-        lastIP = player.getAddress().getAddress().getHostAddress();
+        lastKnownIPs = new HashMap<>();
+        lastKnownIPs.put(player.getAddress().getAddress().getHostAddress(), System.currentTimeMillis());
 
     }
 
@@ -36,7 +39,9 @@ public class AegisUser {
         config.set("secretKey", secretKey);
         config.set("scratchCodes", scratchCodes);
         config.set("lastAuthenticated", lastAuthenticated);
-        config.set("lastIP", lastIP);
+        for (Map.Entry<String, Long> entry : lastKnownIPs.entrySet()) {
+            config.set("ip." + entry.getKey(), entry.getValue());
+        }
     }
 
     public void load() {
@@ -44,6 +49,11 @@ public class AegisUser {
         secretKey = config.getString("secretKey");
         scratchCodes = config.getIntList("scratchCodes");
         lastAuthenticated = config.getLong("lastAuthenticated");
-        lastIP = config.getString("lastIP");
+        lastKnownIPs = new HashMap<>();
+        config.getSection("ip").getKeys().forEach(ip -> lastKnownIPs.put(ip, config.getLong("ip." + ip)));
+    }
+
+    public boolean isRecentIP(String ip) {
+        return lastKnownIPs.containsKey(ip);
     }
 }

@@ -68,6 +68,9 @@ public class AuthenticationDaemon {
         return users.get(uuid);
     }
 
+    public boolean hasUser(UUID uuid) {
+        return users.containsKey(uuid);
+    }
 
     public void loadUsers() {
         File folder = new File(plugin.getDataFolder() + File.separator + "users");

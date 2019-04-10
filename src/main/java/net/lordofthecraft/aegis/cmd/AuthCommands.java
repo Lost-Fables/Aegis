@@ -18,10 +18,10 @@ public class AuthCommands extends CommandTemplate {
 
     @Cmd(value = "Authenticate user using a ToTP", permission = "auth.use")
     public void auth(ProxiedPlayer player, int authCode) {
-        if (!plugin.getDaemon().isAuthenticated(player.getUniqueId())) {
-            player.sendMessage(new ComponentBuilder("Error: ").color(RED).append("You're already authenticated").color(WHITE).create());
-            return;
-        }
+        validate(plugin.getDaemon().hasUser(player.getUniqueId()), "You don't have two factor authentication setup");
+        validate(!plugin.getDaemon().isAuthenticated(player.getUniqueId()), "You're already authenticated");
+
+
         AegisUser user = plugin.getDaemon().getUser(player.getUniqueId());
         if (plugin.getGAuth().authorize(user.getSecretKey(), authCode)) {
 
