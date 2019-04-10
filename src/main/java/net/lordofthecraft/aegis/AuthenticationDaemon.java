@@ -90,6 +90,7 @@ public class AuthenticationDaemon {
 
     public void setupUser(ProxiedPlayer player) {
         createAuthentication(player);
+        awaitingAuthentication.add(player.getUniqueId());
         sendMap(player);
     }
 
