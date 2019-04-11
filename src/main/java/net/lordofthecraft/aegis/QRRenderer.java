@@ -5,6 +5,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import lombok.SneakyThrows;
+import net.lordofthecraft.aegis.bukkit.MapCanvas;
 
 public class QRRenderer{
     private static final String ENCODE_FORMAT = "otpauth://totp/%s@%s?secret=%s";
@@ -12,24 +13,27 @@ public class QRRenderer{
     private static final byte WHITE = (byte) 32;
 
     private BitMatrix bitMatrix = null;
-
+    private final String secret;
+    
     public QRRenderer(String username, String secret, String topbar) {
         bitMatrix = getQRMap(username, secret, topbar);
+        this.secret = secret;
     }
     
 
     public byte[] render() {
-        byte[] bytes = new byte[128*128];
+        MapCanvas c = new MapCanvas();
         for (int x = 0; x < 128; x++) {
             for (int y = 0; y < 128; y++) {
-                int index = x*128 + y;
                 boolean black = bitMatrix.get(x, y);
-                if(black) bytes[index] = BLACK;
-                else bytes[index] = WHITE;
+                if(black) c.setPixel(x, y, BLACK);
+                else c.setPixel(x, y, WHITE);
             }
         }
         
-        return bytes;
+    		c.drawText(5, 5, "Key: " + secret);
+    		c.drawText(5, 120, "/auth ### ###");
+        return c.getBuffer();
     }
 
     @SneakyThrows
