@@ -27,7 +27,7 @@ public class MapData extends AbstractPacket {
   byte zOffset;
   byte[] mapData;
 
-  class Icon {
+  public class Icon {
     int type;
     byte x;
     byte z;
