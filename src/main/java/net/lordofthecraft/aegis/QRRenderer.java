@@ -8,8 +8,8 @@ import lombok.SneakyThrows;
 
 public class QRRenderer{
     private static final String ENCODE_FORMAT = "otpauth://totp/%s@%s?secret=%s";
-    private static final byte BLACK = (byte) 29;
-    private static final byte WHITE = (byte) 8;
+    private static final byte BLACK = (byte) 116;
+    private static final byte WHITE = (byte) 32;
 
     private BitMatrix bitMatrix = null;
 
