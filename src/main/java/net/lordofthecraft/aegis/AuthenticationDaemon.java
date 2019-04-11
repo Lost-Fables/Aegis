@@ -104,7 +104,7 @@ public class AuthenticationDaemon {
         
         byte[] data = getQRCode(player);
         MapData md = new MapData(AUTHENTHICATION_MAP_ID, (byte) 0, false, new MapData.Icon[0],
-                (byte) 128, (byte) 128, (byte) 0, (byte) 0, data);
+                128, 128, 0, 0, data);
         player.unsafe().sendPacket(md);
 
         final PlayerInventory inventory = InventoryManager.getInventory(player.getUniqueId());
@@ -113,7 +113,7 @@ public class AuthenticationDaemon {
         CompoundTag compoundTag = (CompoundTag) map.getNBTTag();
         compoundTag.getValue().put("tag", new IntTag("map", AUTHENTHICATION_MAP_ID));
         map.setNBTTag(compoundTag);
-
+        inventory.setItem(36, map);
         inventory.update();
     }
 

@@ -49,7 +49,7 @@ public class AuthCommands extends CommandTemplate {
     	for(int i = 0; i < things.length; i++) {
     		things[i] = (byte) 8;
     	}
-    	MapData md = new MapData(1337, empty, false, new MapData.Icon[0], (byte) col, (byte) row, empty, empty, things);
+    	MapData md = new MapData(1337, empty, false, new MapData.Icon[0], col, row, empty, empty, things);
     	player.unsafe().sendPacket(md);
     	
       final PlayerInventory inventory = InventoryManager.getInventory(player.getUniqueId());

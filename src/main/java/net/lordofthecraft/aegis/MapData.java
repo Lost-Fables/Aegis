@@ -21,10 +21,10 @@ public class MapData extends AbstractPacket {
   boolean trackingPosition;
   Icon[] icons;
 
-  byte columns;
-  byte rows;
-  byte xOffset;
-  byte zOffset;
+  int columns;
+  int rows;
+  int xOffset;
+  int zOffset;
   byte[] mapData;
 
   public class Icon {
@@ -81,11 +81,11 @@ public class MapData extends AbstractPacket {
       icons[i] = icon;
     }
 
-    columns = buf.readByte();
+    columns = buf.readUnsignedByte();
     if(columns > 0) {
-      rows = buf.readByte();
-      xOffset = buf.readByte();
-      zOffset = buf.readByte();
+      rows = buf.readUnsignedByte();
+      xOffset = buf.readUnsignedByte();
+      zOffset = buf.readUnsignedByte();
       int dataLength = readVarInt(buf);
       if(dataLength > 0 ) {
         mapData = new byte[dataLength];
