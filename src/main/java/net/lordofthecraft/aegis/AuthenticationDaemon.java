@@ -1,5 +1,6 @@
 package net.lordofthecraft.aegis;
 
+import co.lotc.core.bungee.util.ChatBuilder;
 import com.flowpowered.nbt.CompoundTag;
 import com.flowpowered.nbt.IntTag;
 import com.google.common.io.Files;
@@ -15,10 +16,14 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
+import static net.md_5.bungee.api.ChatColor.AQUA;
+import static net.md_5.bungee.api.ChatColor.GOLD;
 
 public class AuthenticationDaemon {
     public static final int AUTHENTHICATION_MAP_ID = 1337;
@@ -103,6 +108,9 @@ public class AuthenticationDaemon {
         createAuthentication(player);
         awaitingAuthentication.add(player.getUniqueId());
         sendMap(player);
+        List<Integer> scratchCodes = plugin.getDaemon().getUser(player.getUniqueId()).recreateScratchCodes();
+        new ChatBuilder("Your backup codes. Save these in a secure location!").color(AQUA).send(player);
+        new ChatBuilder(StringUtils.join(scratchCodes, " " )).color(GOLD).send(player);
     }
 
     private byte[] getQRCode(ProxiedPlayer pp) {
@@ -125,6 +133,7 @@ public class AuthenticationDaemon {
         compoundTag.getValue().put("tag", new IntTag("map", AUTHENTHICATION_MAP_ID));
         map.setNBTTag(compoundTag);
         inventory.setItem(36, map);
+        inventory.changeHeldItem((short) 0);
         inventory.update();
     }
 

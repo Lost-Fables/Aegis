@@ -32,7 +32,7 @@ public class QRRenderer{
         }
         
     		c.drawText(5, 5, "Key: " + secret);
-    		c.drawText(5, 120, "/auth ### ###");
+    		c.drawText(5, 120, "/auth ######");
         return c.getBuffer();
     }
 
