@@ -3,3 +3,8 @@ lowSecurityServer:
   - lobby1
   - lobby2
   - lobby3
+
+# Amount of IPs to save and check against
+savedIPs: 5
+# Amount of days between authenticating
+daysBetweenAuthenticating: 7

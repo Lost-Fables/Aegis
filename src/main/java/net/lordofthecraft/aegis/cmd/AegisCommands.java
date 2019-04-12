@@ -10,4 +10,5 @@ public class AegisCommands extends CommandTemplate {
 	void info(ProxiedPlayer player, ProxiedPlayer target) {
 		//TODO: Finish this
 	}
+	//TODO: Add reload commands
 }

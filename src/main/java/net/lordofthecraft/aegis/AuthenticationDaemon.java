@@ -9,6 +9,7 @@ import de.exceptionflug.protocolize.items.ItemStack;
 import de.exceptionflug.protocolize.items.ItemType;
 import de.exceptionflug.protocolize.items.PlayerInventory;
 import lombok.Getter;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
@@ -43,6 +44,8 @@ public class AuthenticationDaemon {
 
     public void authorize(ProxiedPlayer player) {
         awaitingAuthentication.remove(player.getUniqueId());
+        getUser(player.getUniqueId()).setLastAuthenticated(System.currentTimeMillis());
+        player.sendTitle(ProxyServer.getInstance().createTitle().clear());
     }
 
     public ServerInfo getLowSecurityServer() {
@@ -60,6 +63,10 @@ public class AuthenticationDaemon {
 
     public boolean isLowSecurityServer(ServerInfo server) {
         return isLowSecurityServer(server.getName());
+    }
+
+    public void requireAuthentication(ProxiedPlayer player) {
+        awaitingAuthentication.add(player.getUniqueId());
     }
 
     public void createAuthentication(ProxiedPlayer player) {
@@ -99,7 +106,7 @@ public class AuthenticationDaemon {
     }
 
     private byte[] getQRCode(ProxiedPlayer pp) {
-        String secret = getUser(pp.getUniqueId()).getSecretKey(); //TODO: this must exist
+        String secret = getUser(pp.getUniqueId()).getSecretKey();
         String topbar = "LordOfTheCraft";
         return new QRRenderer(pp.getName(), secret, topbar).render();
     }

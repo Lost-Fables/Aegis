@@ -20,6 +20,7 @@ public class AegisUser {
     private String secretKey;
     private List<Integer> scratchCodes;
     private long lastAuthenticated;
+    @Getter
     private Map<String, Long> lastKnownIPs;
     private Configuration config;
 
@@ -56,6 +57,10 @@ public class AegisUser {
             config.set("ip." + entry.getKey().replaceAll("\\.", "-"), entry.getValue());
         }
 
+        saveConfig();
+    }
+
+    public void saveConfig () {
         try {
             ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, new File(Aegis.INSTANCE.getDataFolder() + File.separator + "users", uuid + ".yml"));
         } catch (IOException e) {
@@ -74,6 +79,12 @@ public class AegisUser {
 
     public boolean isRecentIP(String ip) {
         return lastKnownIPs.containsKey(ip);
+    }
+
+    public void setLastAuthenticated(long lastAuthenticated) {
+        this.lastAuthenticated = lastAuthenticated;
+        config.set("lastAuthenticated", lastAuthenticated);
+        saveConfig();
     }
 
     public List<Integer> recreateScratchCodes() {
