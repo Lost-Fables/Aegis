@@ -7,9 +7,9 @@ import net.lordofthecraft.aegis.Aegis;
 import net.lordofthecraft.aegis.AegisUser;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static net.md_5.bungee.api.ChatColor.*;
 
@@ -50,7 +50,7 @@ public class AuthCommands extends CommandTemplate {
 	    validate(plugin.getDaemon().hasUser(player.getUniqueId()), "You don't have two factor authentication setup");
 	    List<Integer> scratchCodes = plugin.getDaemon().getUser(player.getUniqueId()).recreateScratchCodes();
 	    new ChatBuilder("Your new backup codes").color(AQUA).send(player);
-	    new ChatBuilder(StringUtils.join(scratchCodes, " " )).color(GOLD).send(player);
+	    new ChatBuilder(scratchCodes.stream().map(Object::toString).collect(Collectors.joining(" "))).color(GOLD).send(player);
     }
 
 

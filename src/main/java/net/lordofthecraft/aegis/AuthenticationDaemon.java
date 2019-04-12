@@ -16,11 +16,11 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.md_5.bungee.api.ChatColor.AQUA;
 import static net.md_5.bungee.api.ChatColor.GOLD;
@@ -110,7 +110,7 @@ public class AuthenticationDaemon {
         sendMap(player);
         List<Integer> scratchCodes = plugin.getDaemon().getUser(player.getUniqueId()).recreateScratchCodes();
         new ChatBuilder("Your backup codes. Save these in a secure location!").color(AQUA).send(player);
-        new ChatBuilder(StringUtils.join(scratchCodes, " " )).color(GOLD).send(player);
+        new ChatBuilder(scratchCodes.stream().map(Object::toString).collect(Collectors.joining(" "))).color(GOLD).send(player);
     }
 
     private byte[] getQRCode(ProxiedPlayer pp) {
