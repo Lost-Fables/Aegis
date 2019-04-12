@@ -75,4 +75,9 @@ public class AegisUser {
     public boolean isRecentIP(String ip) {
         return lastKnownIPs.containsKey(ip);
     }
+
+    public List<Integer> recreateScratchCodes() {
+        scratchCodes = Aegis.INSTANCE.getGAuth().createCredentials().getScratchCodes();
+        return scratchCodes;
+    }
 }

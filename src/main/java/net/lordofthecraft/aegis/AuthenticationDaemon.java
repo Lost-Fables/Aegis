@@ -41,6 +41,10 @@ public class AuthenticationDaemon {
         return !awaitingAuthentication.contains(uuid);
     }
 
+    public void authorize(ProxiedPlayer player) {
+        awaitingAuthentication.remove(player.getUniqueId());
+    }
+
     public ServerInfo getLowSecurityServer() {
         for (Map.Entry<String, ServerInfo> servers : plugin.getProxy().getServers().entrySet()) {
             if (lowSecurityServers.contains(servers.getKey())) {
