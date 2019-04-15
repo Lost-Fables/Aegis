@@ -21,7 +21,7 @@ public class AegisCommands extends CommandTemplate {
 	}
 
 	@Cmd("Gets information about an aegis user")
-	void info(ProxiedPlayer player, ProxiedPlayer target) {
+	public void info(ProxiedPlayer player, ProxiedPlayer target) {
 		validate(plugin.getDaemon().hasUser(target.getUniqueId()), target.getName() + " doesn't have two factor authentication setup");
 		AegisUser user = plugin.getDaemon().getUser(target.getUniqueId());
 
@@ -31,7 +31,7 @@ public class AegisCommands extends CommandTemplate {
 	}
 
 	@Cmd("Reload users from disk")
-	void reloadUsers(ProxiedPlayer player) {
+	public void reloadUsers(ProxiedPlayer player) {
 		plugin.loadConfig();
 		plugin.getDaemon().loadUsers();
 		new ChatBuilder("Users reloaded!").color(AQUA).send(player);

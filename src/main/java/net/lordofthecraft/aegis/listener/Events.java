@@ -1,18 +1,18 @@
-package net.lordofthecraft.aegis;
+package net.lordofthecraft.aegis.listener;
 
+import net.lordofthecraft.aegis.Aegis;
+import net.lordofthecraft.aegis.AegisUser;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.event.EventPriority;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -54,14 +54,6 @@ public class Events implements Listener {
 
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onCommand(ChatEvent event) {
-        if (event.getReceiver() instanceof ProxiedPlayer && plugin.getDaemon().isAwaitingAuthentication(((ProxiedPlayer) event.getReceiver()).getUniqueId())) {
-            if (!event.getMessage().split(" ")[0].equalsIgnoreCase("/auth")) {
-                event.setCancelled(true);
-            }
-        }
-    }
 
     @EventHandler
     public void onLogin(PostLoginEvent event) {

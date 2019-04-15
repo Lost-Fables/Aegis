@@ -9,6 +9,8 @@ import de.exceptionflug.protocolize.api.util.ProtocolVersions;
 import lombok.Getter;
 import net.lordofthecraft.aegis.cmd.AegisCommands;
 import net.lordofthecraft.aegis.cmd.AuthCommands;
+import net.lordofthecraft.aegis.listener.ChatListener;
+import net.lordofthecraft.aegis.listener.Events;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -85,5 +87,6 @@ public final class Aegis extends Plugin {
 
     public void registerPacket() {
         ProtocolAPI.getPacketRegistration().registerPlayClientPacket(MapData.class, ImmutableMap.of(ProtocolVersions.MINECRAFT_1_13_2, 0x26));
+        ProtocolAPI.getEventManager().registerListener(new ChatListener(this));
     }
 }
