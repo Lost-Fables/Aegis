@@ -11,6 +11,7 @@ import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -52,9 +53,9 @@ public class Events implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onCommand(ChatEvent event) {
-        if (event.isCommand() && event.getReceiver() instanceof ProxiedPlayer && !plugin.getDaemon().isAuthenticated(((ProxiedPlayer) event.getReceiver()).getUniqueId())) {
+        if (event.getReceiver() instanceof ProxiedPlayer && !plugin.getDaemon().isAwaitingAuthentication(((ProxiedPlayer) event.getReceiver()).getUniqueId())) {
             event.setCancelled(true);
         }
     }
@@ -63,6 +64,9 @@ public class Events implements Listener {
     public void onLogin(PostLoginEvent event) {
         ProxiedPlayer player = event.getPlayer();
         if (!plugin.getDaemon().hasUser(player.getUniqueId())) {
+            if (player.hasPermission("auth.required")) {
+                plugin.getDaemon().setupUser(player);
+            }
             return;
         }
         AegisUser user = plugin.getDaemon().getUser(player.getUniqueId());

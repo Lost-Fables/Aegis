@@ -45,11 +45,16 @@ public class AuthCommands extends CommandTemplate {
         
     }
 
+    @Cmd(value = "Disable your 2fa", permission = "auth.use")
+    public void disable(ProxiedPlayer player) {
+    	// TODO:
+    }
+
     @Cmd(value = "Recreate your backup codes", permission = "auth.use")
     public void getBackupCodes(ProxiedPlayer player) {
 	    validate(plugin.getDaemon().hasUser(player.getUniqueId()), "You don't have two factor authentication setup");
 	    List<Integer> scratchCodes = plugin.getDaemon().getUser(player.getUniqueId()).recreateScratchCodes();
-	    new ChatBuilder("Your new backup codes").color(AQUA).send(player);
+	    new ChatBuilder("Your new backup codes are").color(AQUA).send(player);
 	    new ChatBuilder(scratchCodes.stream().map(Object::toString).collect(Collectors.joining(" "))).color(GOLD).send(player);
     }
 

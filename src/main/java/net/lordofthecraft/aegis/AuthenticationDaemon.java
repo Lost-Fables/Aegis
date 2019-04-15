@@ -47,6 +47,10 @@ public class AuthenticationDaemon {
         return !awaitingAuthentication.contains(uuid);
     }
 
+    public boolean isAwaitingAuthentication(UUID uuid) {
+        return awaitingAuthentication.contains(uuid);
+    }
+
     public void authorize(ProxiedPlayer player) {
         awaitingAuthentication.remove(player.getUniqueId());
         getUser(player.getUniqueId()).setLastAuthenticated(System.currentTimeMillis());
