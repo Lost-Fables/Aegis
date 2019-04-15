@@ -29,6 +29,8 @@ public class AuthCommands extends CommandTemplate {
         	plugin.getDaemon().sendQueuedChat(player);
 	        new ChatBuilder("SUCCESSFULLY ").color(GREEN).append("authenticated!").color(AQUA).send(player);
 	        new ChatBuilder("[Click me to go to the main server]").color(GOLD).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server main")).send(player);
+
+	        InventoryManager.getInventory(player.getUniqueId()).removeItem(36);
 	        InventoryManager.getInventory(player.getUniqueId()).update();
         } else if (user.getScratchCodes().contains(authCode)) {
             plugin.getDaemon().authorize(player);
