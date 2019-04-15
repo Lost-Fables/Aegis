@@ -55,8 +55,10 @@ public class Events implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCommand(ChatEvent event) {
-        if (event.getReceiver() instanceof ProxiedPlayer && !plugin.getDaemon().isAwaitingAuthentication(((ProxiedPlayer) event.getReceiver()).getUniqueId())) {
-            event.setCancelled(true);
+        if (event.getReceiver() instanceof ProxiedPlayer && plugin.getDaemon().isAwaitingAuthentication(((ProxiedPlayer) event.getReceiver()).getUniqueId())) {
+            if (!event.getMessage().split(" ")[0].equalsIgnoreCase("/auth")) {
+                event.setCancelled(true);
+            }
         }
     }
 
