@@ -35,10 +35,7 @@ public class Events implements Listener {
             return;
         }
 
-        Title title = ProxyServer.getInstance().createTitle();
-        title.title(new ComponentBuilder("Authenticate with ").append(" /auth").color(ChatColor.RED).create());
-        title.stay(500);
-        event.getPlayer().sendTitle(title);
+        sendTitle(event.getPlayer());
 
         ServerInfo lowSecurityServer = plugin.getDaemon().getLowSecurityServer();
         if (lowSecurityServer == null) {
@@ -67,10 +64,7 @@ public class Events implements Listener {
         AegisUser user = plugin.getDaemon().getUser(player.getUniqueId());
         if (System.currentTimeMillis() - user.getLastAuthenticated() > TimeUnit.DAYS.toMillis(plugin.getConfig().getInt("daysBetweenAuthenticating", 7)) || !user.isRecentIP(player.getAddress().getAddress().getHostAddress())) {
             plugin.getDaemon().requireAuthentication(player);
-            Title title = ProxyServer.getInstance().createTitle();
-            title.title(new ComponentBuilder("Authenticate with ").append(" /auth").color(ChatColor.RED).create());
-            title.stay(500);
-            event.getPlayer().sendTitle(title);
+            sendTitle(player);
         }
 
 
@@ -98,5 +92,13 @@ public class Events implements Listener {
     @EventHandler
     public void logout(PlayerDisconnectEvent event) {
         plugin.getDaemon().removeAwaitingAuthentication(event.getPlayer().getUniqueId());
+    }
+
+    private void sendTitle(ProxiedPlayer player) {
+        Title title = ProxyServer.getInstance().createTitle();
+        title.title(new ComponentBuilder("").create());
+        title.subTitle(new ComponentBuilder("Authenticate with ").append(" /auth").color(ChatColor.RED).create());
+        title.stay(200);
+        player.sendTitle(title);
     }
 }

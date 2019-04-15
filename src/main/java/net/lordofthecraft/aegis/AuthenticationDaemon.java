@@ -80,7 +80,7 @@ public class AuthenticationDaemon {
 
     public void createAuthentication(ProxiedPlayer player) {
         final GoogleAuthenticatorKey key = plugin.getGAuth().createCredentials();
-        AegisUser  aegisUser = new AegisUser(player, key.getKey(), key.getScratchCodes());
+        AegisUser aegisUser = new AegisUser(player, key.getKey(), key.getScratchCodes());
         users.put(player.getUniqueId(), aegisUser);
     }
 

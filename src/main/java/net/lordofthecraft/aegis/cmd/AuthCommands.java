@@ -3,6 +3,7 @@ package net.lordofthecraft.aegis.cmd;
 import co.lotc.core.bungee.util.ChatBuilder;
 import co.lotc.core.command.CommandTemplate;
 import co.lotc.core.command.annotate.Cmd;
+import de.exceptionflug.protocolize.items.InventoryManager;
 import net.lordofthecraft.aegis.Aegis;
 import net.lordofthecraft.aegis.AegisUser;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -30,6 +31,7 @@ public class AuthCommands extends CommandTemplate {
         	plugin.getDaemon().authorize(player);
 	        new ChatBuilder("SUCCESSFULLY ").color(GREEN).append("authenticated!").color(AQUA).send(player);
 	        new ChatBuilder("[Click me to go to the main server]").color(GOLD).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server main")).send(player);
+	        InventoryManager.getInventory(player.getUniqueId()).update();
         } else if (user.getScratchCodes().contains(authCode)) {
             plugin.getDaemon().authorize(player);
 	        new ChatBuilder("SUCCESSFULLY ").color(GREEN).append("authenticated with a backup code. You're being required to setup up your authentication again.").color(AQUA).send(player);
