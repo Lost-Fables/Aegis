@@ -23,6 +23,7 @@ public class AegisUser {
     @Getter
     private Map<String, Long> lastKnownIPs;
     private Configuration config;
+    private File file;
 
     public AegisUser(ProxiedPlayer player, String secretKey, List<Integer> scratchCodes) {
         this.uuid = player.getUniqueId();
@@ -33,7 +34,7 @@ public class AegisUser {
         lastKnownIPs.put(player.getAddress().getAddress().getHostAddress(), System.currentTimeMillis());
 
 
-        File file = new File(Aegis.INSTANCE.getDataFolder() + File.separator + "users", uuid + ".yml");
+        file = new File(Aegis.INSTANCE.getDataFolder() + File.separator + "users", uuid + ".yml");
         try {
             file.createNewFile();
             config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
@@ -46,6 +47,7 @@ public class AegisUser {
     public AegisUser(Configuration config) {
         this.config = config;
         load();
+        file = new File(Aegis.INSTANCE.getDataFolder() + File.separator + "users", uuid + ".yml");
     }
 
     public void save() {
@@ -62,7 +64,7 @@ public class AegisUser {
 
     public void saveConfig () {
         try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, new File(Aegis.INSTANCE.getDataFolder() + File.separator + "users", uuid + ".yml"));
+            ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, file);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,5 +92,9 @@ public class AegisUser {
     public List<Integer> recreateScratchCodes() {
         scratchCodes = Aegis.INSTANCE.getGAuth().createCredentials().getScratchCodes();
         return scratchCodes;
+    }
+
+    public void delete() {
+        file.delete();
     }
 }

@@ -25,9 +25,9 @@ public final class Aegis extends Plugin {
 
     public static Aegis INSTANCE;
 
-    AuthenticationDaemon daemon;
-    GoogleAuthenticator gAuth;
-    Configuration config;
+    private AuthenticationDaemon daemon;
+    private GoogleAuthenticator gAuth;
+    private Configuration config;
 
     @Override
     public void onEnable() {

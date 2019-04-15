@@ -79,7 +79,7 @@ public class AuthenticationDaemon {
     }
 
     public void createAuthentication(ProxiedPlayer player) {
-        final GoogleAuthenticatorKey key = plugin.gAuth.createCredentials();
+        final GoogleAuthenticatorKey key = plugin.getGAuth().createCredentials();
         AegisUser  aegisUser = new AegisUser(player, key.getKey(), key.getScratchCodes());
         users.put(player.getUniqueId(), aegisUser);
     }
@@ -90,6 +90,15 @@ public class AuthenticationDaemon {
 
     public boolean hasUser(UUID uuid) {
         return users.containsKey(uuid);
+    }
+
+    public void removeUser(UUID uuid) {
+        users.get(uuid).delete();
+        users.remove(uuid);
+    }
+
+    public void removeAwaitingAuthentication(UUID uuid) {
+        awaitingAuthentication.remove(uuid);
     }
 
     public void loadUsers() {

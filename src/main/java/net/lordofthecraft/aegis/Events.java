@@ -7,6 +7,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -26,11 +27,11 @@ public class Events implements Listener {
 
     @EventHandler
     public void onProxyChange(ServerConnectEvent event) {
-        if (plugin.daemon.isLowSecurityServer(event.getTarget())) {
+        if (plugin.getDaemon().isLowSecurityServer(event.getTarget())) {
             return;
         }
 
-        if (plugin.daemon.isAuthenticated(event.getPlayer().getUniqueId())) {
+        if (plugin.getDaemon().isAuthenticated(event.getPlayer().getUniqueId())) {
             return;
         }
 
@@ -85,7 +86,7 @@ public class Events implements Listener {
 
         Map.Entry<String, Long> oldestIP = null;
         boolean firstLoop = true;
-        while (user.getLastKnownIPs().size() > plugin.config.getInt("savedIPs", 5)) {
+        while (user.getLastKnownIPs().size() > plugin.getConfig().getInt("savedIPs", 5)) {
             for (Map.Entry<String, Long> ipEntry : user.getLastKnownIPs().entrySet()) {
                 // Only do this on the first loop so we don't set values over and over again.
                 if (firstLoop && player.getAddress().getAddress().getHostAddress().equals(ipEntry.getKey())) {
@@ -100,5 +101,10 @@ public class Events implements Listener {
             firstLoop = false;
         }
         user.saveConfig();
+    }
+
+    @EventHandler
+    public void logout(PlayerDisconnectEvent event) {
+        plugin.getDaemon().removeAwaitingAuthentication(event.getPlayer().getUniqueId());
     }
 }

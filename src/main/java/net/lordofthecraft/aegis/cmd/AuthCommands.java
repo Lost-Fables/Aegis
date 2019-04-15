@@ -47,12 +47,18 @@ public class AuthCommands extends CommandTemplate {
 
     @Cmd(value = "Disable your 2fa", permission = "auth.use")
     public void disable(ProxiedPlayer player) {
-    	// TODO:
+	    validate(plugin.getDaemon().hasUser(player.getUniqueId()), "You don't have two factor authentication setup");
+	    validate(!plugin.getDaemon().isAwaitingAuthentication(player.getUniqueId()), "You can't run that command right now");
+
+	    plugin.getDaemon().removeUser(player.getUniqueId());
+	    player.disconnect(new ComponentBuilder("2FA removed! Please relog.").create());
     }
 
     @Cmd(value = "Recreate your backup codes", permission = "auth.use")
     public void getBackupCodes(ProxiedPlayer player) {
 	    validate(plugin.getDaemon().hasUser(player.getUniqueId()), "You don't have two factor authentication setup");
+	    validate(!plugin.getDaemon().isAwaitingAuthentication(player.getUniqueId()), "You can't run that command right now");
+
 	    List<Integer> scratchCodes = plugin.getDaemon().getUser(player.getUniqueId()).recreateScratchCodes();
 	    new ChatBuilder("Your new backup codes are").color(AQUA).send(player);
 	    new ChatBuilder(scratchCodes.stream().map(Object::toString).collect(Collectors.joining(" "))).color(GOLD).send(player);
