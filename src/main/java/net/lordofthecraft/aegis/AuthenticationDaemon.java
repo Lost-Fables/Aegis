@@ -20,6 +20,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static net.md_5.bungee.api.ChatColor.AQUA;
@@ -120,7 +121,9 @@ public class AuthenticationDaemon {
     public void setupUser(ProxiedPlayer player) {
         createAuthentication(player);
         awaitingAuthentication.add(player.getUniqueId());
-        sendMap(player);
+
+        plugin.getProxy().getScheduler().schedule(plugin, () -> sendMap(player), 2, TimeUnit.SECONDS);
+
         List<Integer> scratchCodes = plugin.getDaemon().getUser(player.getUniqueId()).recreateScratchCodes();
         new ChatBuilder("Your backup codes. Save these in a secure location!").color(AQUA).send(player);
         new ChatBuilder(scratchCodes.stream().map(Object::toString).collect(Collectors.joining(" "))).color(GOLD).send(player);
