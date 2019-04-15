@@ -54,6 +54,16 @@ public class AuthCommands extends CommandTemplate {
 	    player.disconnect(new ComponentBuilder("2FA removed! Please relog.").create());
     }
 
+    @Cmd(value = "Disable 2FA for another player", permission = "auth.disable.others")
+    public void disable(ProxiedPlayer player, ProxiedPlayer target) {
+	    validate(plugin.getDaemon().hasUser(target.getUniqueId()), "You don't have two factor authentication setup");
+	    validate(!plugin.getDaemon().isAwaitingAuthentication(target.getUniqueId()), "You can't run that command right now");
+
+	    plugin.getDaemon().removeUser(target.getUniqueId());
+	    target.disconnect(new ComponentBuilder("2FA removed! Please relog.").create());
+	    player.sendMessage(new ComponentBuilder(target.getName()).color(GOLD).append(" has had their 2FA removed").color(AQUA).create());
+    }
+
     @Cmd(value = "Recreate your backup codes", permission = "auth.use")
     public void getBackupCodes(ProxiedPlayer player) {
 	    validate(plugin.getDaemon().hasUser(player.getUniqueId()), "You don't have two factor authentication setup");
