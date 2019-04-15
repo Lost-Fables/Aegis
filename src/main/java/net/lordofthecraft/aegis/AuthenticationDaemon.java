@@ -172,8 +172,7 @@ public class AuthenticationDaemon {
 
     public void sendBackupCodes(ProxiedPlayer player) {
         List<Integer> scratchCodes = plugin.getDaemon().getUser(player.getUniqueId()).recreateScratchCodes();
-        new ChatBuilder(BACKUP_CODES).color(AQUA).send(player)
-                .newline()
+        new ChatBuilder(BACKUP_CODES).color(AQUA).newline()
                 .append(scratchCodes.stream().map(Object::toString).collect(Collectors.joining(" "))).color(GOLD).send(player);
     }
 }

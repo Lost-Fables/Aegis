@@ -19,7 +19,8 @@ public class ChatSendListener extends PacketAdapter<Chat> {
 	@Override
 	public void send(PacketSendEvent<Chat> event) {
 		if (plugin.getDaemon().isAwaitingAuthentication(event.getPlayer().getUniqueId())) {
-			if (event.getPacket().getMessage().startsWith("SUCCESSFULLY") || event.getPacket().getMessage().contains(AuthenticationDaemon.BACKUP_CODES)) {
+			String message = event.getPacket().getMessage();
+			if (message.contains("SUCCESSFULLY") || message.contains(AuthenticationDaemon.BACKUP_CODES) || message.contains("Error: ")) {
 				return;
 			}
 
