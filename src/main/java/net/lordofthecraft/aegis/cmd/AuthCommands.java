@@ -31,7 +31,7 @@ public class AuthCommands extends CommandTemplate {
         } else if (user.getScratchCodes().contains(authCode)) {
             plugin.getDaemon().authorize(player);
 	        new ChatBuilder("SUCCESSFULLY ").color(GREEN).append("authenticated with a backup code. You're being required to setup up your authentication again.").color(AQUA).send(player);
-            plugin.getDaemon().createAuthentication(player);
+	        plugin.getDaemon().setupUser(player);
         } else {
         	player.sendMessage(new ComponentBuilder("Error: ").color(RED).append("Invalid auth code").color(WHITE).create());
         }
