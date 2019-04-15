@@ -36,9 +36,9 @@ public class AuthenticationDaemon {
 
     public AuthenticationDaemon(Aegis plugin) {
         this.plugin = plugin;
+        users = new HashMap<>();
         loadUsers();
         awaitingAuthentication = new HashSet<>();
-        users = new HashMap<>();
 
         lowSecurityServers = plugin.getConfig().getStringList("lowSecurityServer");
     }
