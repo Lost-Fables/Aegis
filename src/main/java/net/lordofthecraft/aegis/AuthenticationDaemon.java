@@ -36,7 +36,6 @@ public class AuthenticationDaemon {
 
     public AuthenticationDaemon(Aegis plugin) {
         this.plugin = plugin;
-        users = new HashMap<>();
         loadUsers();
         awaitingAuthentication = new HashSet<>();
 
@@ -102,6 +101,7 @@ public class AuthenticationDaemon {
     }
 
     public void loadUsers() {
+        users = new HashMap<>();
         File folder = new File(plugin.getDataFolder() + File.separator + "users");
         folder.mkdirs();
 

@@ -39,7 +39,7 @@ public final class Aegis extends Plugin {
         gAuth = new GoogleAuthenticator();
 
         Commands.build(new BungeeCommandData(this, "auth", "auth.use", "ToTP authentication for bungee", new ArrayList<>()), () -> new AuthCommands(this));
-        Commands.build(new BungeeCommandData(this, "aegis", "aegis.use", "Administration commands for Aegis", new ArrayList<>()), AegisCommands::new);
+        Commands.build(new BungeeCommandData(this, "aegis", "aegis.use", "Administration commands for Aegis", new ArrayList<>()), () -> new AegisCommands(this));
 
         getProxy().getPluginManager().registerListener(this, new Events(this));
         daemon = new AuthenticationDaemon(this);
