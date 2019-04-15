@@ -6,11 +6,11 @@ import de.exceptionflug.protocolize.api.protocol.Stream;
 import net.lordofthecraft.aegis.Aegis;
 import net.md_5.bungee.protocol.packet.Chat;
 
-public class ChatListener extends PacketAdapter<Chat> {
+public class ChatReceiveListener extends PacketAdapter<Chat> {
 
 	Aegis plugin;
 
-	public ChatListener(Aegis plugin) {
+	public ChatReceiveListener(Aegis plugin) {
 		super(Stream.UPSTREAM, Chat.class);
 		this.plugin = plugin;
 	}

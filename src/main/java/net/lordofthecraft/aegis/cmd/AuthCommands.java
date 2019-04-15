@@ -10,9 +10,6 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static net.md_5.bungee.api.ChatColor.*;
 
 public class AuthCommands extends CommandTemplate {
@@ -29,6 +26,7 @@ public class AuthCommands extends CommandTemplate {
         AegisUser user = plugin.getDaemon().getUser(player.getUniqueId());
         if (plugin.getGAuth().authorize(user.getSecretKey(), authCode)) {
         	plugin.getDaemon().authorize(player);
+        	plugin.getDaemon().sendQueuedChat(player);
 	        new ChatBuilder("SUCCESSFULLY ").color(GREEN).append("authenticated!").color(AQUA).send(player);
 	        new ChatBuilder("[Click me to go to the main server]").color(GOLD).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server main")).send(player);
 	        InventoryManager.getInventory(player.getUniqueId()).update();
@@ -71,9 +69,7 @@ public class AuthCommands extends CommandTemplate {
 	    validate(plugin.getDaemon().hasUser(player.getUniqueId()), "You don't have two factor authentication setup");
 	    validate(!plugin.getDaemon().isAwaitingAuthentication(player.getUniqueId()), "You can't run that command right now");
 
-	    List<Integer> scratchCodes = plugin.getDaemon().getUser(player.getUniqueId()).recreateScratchCodes();
-	    new ChatBuilder("Your new backup codes are").color(AQUA).send(player);
-	    new ChatBuilder(scratchCodes.stream().map(Object::toString).collect(Collectors.joining(" "))).color(GOLD).send(player);
+	    plugin.getDaemon().sendBackupCodes(player);
     }
 
 

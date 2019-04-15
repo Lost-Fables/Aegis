@@ -16,6 +16,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import net.md_5.bungee.protocol.packet.Chat;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,15 +28,18 @@ import static net.md_5.bungee.api.ChatColor.AQUA;
 import static net.md_5.bungee.api.ChatColor.GOLD;
 
 public class AuthenticationDaemon {
-    public static final int AUTHENTHICATION_MAP_ID = 1337;
+    private static final int AUTHENTHICATION_MAP_ID = 1337;
+    public static final String BACKUP_CODES = "Your backup codes. Save these in a secure location!";
     
     private Aegis plugin;
     private Set<UUID> awaitingAuthentication;
     private Map<UUID, AegisUser> users;
+    private Map<UUID, Set<Chat>> queuedChat;
     @Getter
     private List<String> lowSecurityServers;
 
     public AuthenticationDaemon(Aegis plugin) {
+        queuedChat = new HashMap<>();
         this.plugin = plugin;
         loadUsers();
         awaitingAuthentication = new HashSet<>();
@@ -123,10 +127,7 @@ public class AuthenticationDaemon {
         awaitingAuthentication.add(player.getUniqueId());
 
         plugin.getProxy().getScheduler().schedule(plugin, () -> sendMap(player), 2, TimeUnit.SECONDS);
-
-        List<Integer> scratchCodes = plugin.getDaemon().getUser(player.getUniqueId()).recreateScratchCodes();
-        new ChatBuilder("Your backup codes. Save these in a secure location!").color(AQUA).send(player);
-        new ChatBuilder(scratchCodes.stream().map(Object::toString).collect(Collectors.joining(" "))).color(GOLD).send(player);
+        sendBackupCodes(player);
     }
 
     private byte[] getQRCode(ProxiedPlayer pp) {
@@ -155,5 +156,22 @@ public class AuthenticationDaemon {
 
     public void saveUsers() {
         users.values().forEach(AegisUser::save);
+    }
+
+    public void queueMessage(ProxiedPlayer player, Chat message) {
+        Set<Chat> chat = queuedChat.getOrDefault(player.getUniqueId(), new HashSet<>());
+        chat.add(message);
+        queuedChat.put(player.getUniqueId(), chat);
+    }
+
+    public void sendQueuedChat(ProxiedPlayer player) {
+        queuedChat.get(player.getUniqueId()).forEach(p -> player.unsafe().sendPacket(p));
+    }
+
+    public void sendBackupCodes(ProxiedPlayer player) {
+        List<Integer> scratchCodes = plugin.getDaemon().getUser(player.getUniqueId()).recreateScratchCodes();
+        new ChatBuilder(BACKUP_CODES).color(AQUA).send(player)
+                .newline()
+                .append(scratchCodes.stream().map(Object::toString).collect(Collectors.joining(" "))).color(GOLD).send(player);
     }
 }
