@@ -25,7 +25,7 @@ public class AegisCommands extends CommandTemplate {
 		validate(plugin.getDaemon().hasUser(target.getUniqueId()), target.getName() + " doesn't have two factor authentication setup");
 		AegisUser user = plugin.getDaemon().getUser(target.getUniqueId());
 
-		new ChatBuilder("Last Authenticated: ").append(new SimpleDateFormat("dd/MM/yy").format(user.getLastAuthenticated())).newline()
+		new ChatBuilder("Last Authenticated: ").append(new SimpleDateFormat("dd/MM/yyyy").format(user.getLastAuthenticated())).newline()
 				.append("Last Known IPs: ").append(user.getLastKnownIPs().keySet().stream().map(s -> s.replaceAll("-", ".")).collect(Collectors.joining(" ")))
 		.send(player);
 	}

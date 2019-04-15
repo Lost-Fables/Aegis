@@ -8,10 +8,10 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public class AegisUser {
@@ -30,7 +30,7 @@ public class AegisUser {
         this.secretKey = secretKey;
         this.scratchCodes = scratchCodes;
         lastAuthenticated = System.currentTimeMillis();
-        lastKnownIPs = new HashMap<>();
+        lastKnownIPs = new ConcurrentHashMap<>();
         lastKnownIPs.put(player.getAddress().getAddress().getHostAddress(), System.currentTimeMillis());
 
 
@@ -75,7 +75,7 @@ public class AegisUser {
         secretKey = config.getString("secretKey");
         scratchCodes = config.getIntList("scratchCodes");
         lastAuthenticated = config.getLong("lastAuthenticated");
-        lastKnownIPs = new HashMap<>();
+        lastKnownIPs = new ConcurrentHashMap<>();
         config.getSection("ip").getKeys().forEach(ip -> lastKnownIPs.put(ip.replaceAll("-", "."), config.getLong("ip." + ip)));
     }
 
