@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class AuthenticationDaemon {
     private Aegis plugin;
     private Set<UUID> awaitingAuthentication;
     private Map<UUID, AegisUser> users;
-    private Map<UUID, Set<Chat>> queuedChat;
+    private Map<UUID, Queue<Chat>> queuedChat;
     @Getter
     private List<String> lowSecurityServers;
 
@@ -160,13 +161,13 @@ public class AuthenticationDaemon {
     }
 
     public void queueMessage(ProxiedPlayer player, Chat message) {
-        Set<Chat> chat = queuedChat.getOrDefault(player.getUniqueId(), new HashSet<>());
+        Queue<Chat> chat = queuedChat.getOrDefault(player.getUniqueId(), new ConcurrentLinkedQueue<>());
         chat.add(message);
         queuedChat.put(player.getUniqueId(), chat);
     }
 
     public void sendQueuedChat(ProxiedPlayer player) {
-        queuedChat.getOrDefault(player.getUniqueId(), new HashSet<>()).forEach(p -> player.unsafe().sendPacket(p));
+        queuedChat.getOrDefault(player.getUniqueId(), new ConcurrentLinkedQueue<>()).forEach(p -> player.unsafe().sendPacket(p));
     }
 
     public void sendBackupCodes(ProxiedPlayer player) {
