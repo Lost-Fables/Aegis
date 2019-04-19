@@ -67,24 +67,24 @@ public class Events implements Listener {
             sendTitle(player);
         }
 
+        if (user.isRecentIP(player.getAddress().getAddress().getHostAddress())) {
+            user.getLastKnownIPs().put(player.getAddress().getAddress().getHostAddress(), System.currentTimeMillis());
+        }
+
 
         // This is terrible code and I'm sorry. I blame Fireheart
 
         Map.Entry<String, Long> oldestIP = null;
-        boolean firstLoop = true;
         while (user.getLastKnownIPs().size() > plugin.getConfig().getInt("savedIPs", 5)) {
             for (Map.Entry<String, Long> ipEntry : user.getLastKnownIPs().entrySet()) {
                 // Only do this on the first loop so we don't set values over and over again.
-                if (firstLoop && player.getAddress().getAddress().getHostAddress().equals(ipEntry.getKey())) {
-                    ipEntry.setValue(System.currentTimeMillis());
-                }
+
 
                 if (oldestIP == null || ipEntry.getValue() < oldestIP.getValue()) {
                     oldestIP = ipEntry;
                 }
             }
-            user.getLastKnownIPs().remove(oldestIP.getKey(), oldestIP.getValue());
-            firstLoop = false;
+            user.getLastKnownIPs().remove(oldestIP.getKey(), oldestIP.getValue());;
         }
         user.saveConfig();
     }
