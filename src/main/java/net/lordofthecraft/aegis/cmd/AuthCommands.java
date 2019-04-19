@@ -1,5 +1,6 @@
 package net.lordofthecraft.aegis.cmd;
 
+import co.lotc.core.bungee.convo.ChatStream;
 import co.lotc.core.bungee.util.ChatBuilder;
 import co.lotc.core.command.CommandTemplate;
 import co.lotc.core.command.annotate.Cmd;
@@ -52,8 +53,11 @@ public class AuthCommands extends CommandTemplate {
 	    validate(plugin.getDaemon().hasUser(player.getUniqueId()), "You don't have two factor authentication setup");
 	    validate(!plugin.getDaemon().isAwaitingAuthentication(player.getUniqueId()), "You can't run that command right now");
 
-	    plugin.getDaemon().removeUser(player.getUniqueId());
-	    player.disconnect(new ComponentBuilder("2FA removed! Please relog.").create());
+	    new ChatStream(player).confirmPrompt().activate((context) -> {
+		    plugin.getDaemon().removeUser(player.getUniqueId());
+		    player.disconnect(new ComponentBuilder("2FA removed! Please relog.").create());
+	    });
+
     }
 
     @Cmd(value = "Disable 2FA for another player", permission = "auth.disable.others")
