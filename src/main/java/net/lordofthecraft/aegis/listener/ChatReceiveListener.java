@@ -23,7 +23,7 @@ public class ChatReceiveListener extends PacketAdapter<Chat> {
 	public void receive(PacketReceiveEvent<Chat> event) {
 		if (plugin.getDaemon().isAwaitingAuthentication(event.getPlayer().getUniqueId())) {
 			if (!event.getPacket().getMessage().split(" ")[0].equalsIgnoreCase("/auth")) {
-				new ChatBuilder("Error: Use ").color(RED).append("/auth").color(GOLD).append(" to authenticate").color(RED);
+				new ChatBuilder("Error: Use ").color(RED).append("/auth").color(GOLD).append(" to authenticate").color(RED).send(event.getPlayer());
 				event.setCancelled(true);
 			}
 		}
