@@ -37,4 +37,16 @@ public class AegisCommands extends CommandTemplate {
 		plugin.getDaemon().loadUsers();
 		new ChatBuilder("Users reloaded!").color(AQUA).send(sender);
 	}
+
+	@Cmd("Reload config")
+	public void reloadConfig(CommandSender sender) {
+		plugin.loadConfig();
+		new ChatBuilder("Config reloaded!").color(AQUA).send(sender);
+	}
+
+	@Cmd("Reload plugin")
+	public void reload(CommandSender sender) {
+		reloadUsers(sender);
+		reloadConfig(sender);
+	}
 }
