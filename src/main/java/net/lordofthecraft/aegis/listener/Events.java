@@ -55,7 +55,7 @@ public class Events implements Listener {
     @EventHandler
     public void onLogin(PostLoginEvent event) {
         ProxiedPlayer player = event.getPlayer();
-        if (!plugin.getDaemon().hasUser(player.getUniqueId())) {
+        if (!plugin.getDaemon().hasAuthentication(player.getUniqueId())) {
             if (player.hasPermission("auth.required")) {
                 plugin.getDaemon().setupUser(player);
             }

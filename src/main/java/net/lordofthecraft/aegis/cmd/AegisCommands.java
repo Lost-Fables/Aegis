@@ -22,7 +22,7 @@ public class AegisCommands extends CommandTemplate {
 
 	@Cmd("Gets information about an aegis user")
 	public void info(ProxiedPlayer player, ProxiedPlayer target) {
-		validate(plugin.getDaemon().hasUser(target.getUniqueId()), target.getName() + " doesn't have two factor authentication setup");
+		validate(plugin.getDaemon().hasAuthentication(target.getUniqueId()), target.getName() + " doesn't have two factor authentication setup");
 		AegisUser user = plugin.getDaemon().getUser(target.getUniqueId());
 
 		new ChatBuilder("Last Authenticated: ").append(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(user.getLastAuthenticated())).newline()

@@ -94,7 +94,7 @@ public class AuthenticationDaemon {
         return users.get(uuid);
     }
 
-    public boolean hasUser(UUID uuid) {
+    public boolean hasAuthentication(UUID uuid) {
         return users.containsKey(uuid);
     }
 

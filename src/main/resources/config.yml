@@ -8,3 +8,11 @@ lowSecurityServer:
 savedIPs: 5
 # Amount of days between authenticating
 daysBetweenAuthenticating: 7
+
+suggestedApps:
+  "Auth (iOS & Android)":
+    - "https://www.authy.com/app/"
+  "Google Auth (iOS)":
+    - "https://itunes.apple.com/ca/app/google-authenticator/id388497605?mt=8"
+  "Google Auth (Android)":
+    - "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en"
