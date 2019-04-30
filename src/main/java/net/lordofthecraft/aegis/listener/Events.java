@@ -80,7 +80,7 @@ public class Events implements Listener {
             }
             user.getLastKnownIPs().remove(oldestIP.getKey(), oldestIP.getValue());
         }
-        user.saveConfig();
+        user.save();
     }
 
     @EventHandler

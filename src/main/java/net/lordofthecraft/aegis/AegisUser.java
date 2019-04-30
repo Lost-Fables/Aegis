@@ -58,7 +58,7 @@ public class AegisUser {
         config.set("scratchCodes", scratchCodes);
         config.set("lastAuthenticated", lastAuthenticated);
         for (Map.Entry<String, Long> entry : lastKnownIPs.entrySet()) {
-            config.set("ip." + entry.getKey().replaceAll("\\.", "-"), entry.getValue());
+            config.set("ip." + entry.getKey().replaceAll("\\.", "\\."), entry.getValue());
         }
 
         saveConfig();
@@ -93,7 +93,13 @@ public class AegisUser {
 
     public List<Integer> recreateScratchCodes() {
         scratchCodes = Aegis.INSTANCE.getGAuth().createCredentials().getScratchCodes();
+        save();
         return scratchCodes;
+    }
+
+    public void updateIP(String ip) {
+        lastKnownIPs.put(ip, System.currentTimeMillis());
+        save();
     }
 
     public void delete() {

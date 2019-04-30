@@ -45,7 +45,7 @@ public class AuthCommands extends CommandTemplate {
 		        plugin.getDaemon().sendBackupCodes(player);
 	        }
 
-	        user.getLastKnownIPs().put(player.getAddress().getAddress().getHostAddress(), System.currentTimeMillis()); // They've authenticated so we want to record down their IP
+	        user.updateIP(player.getAddress().getAddress().getHostAddress()); // They've authenticated so we want to record down their IP
         } else if (user.getScratchCodes().contains(authCode)) {
             plugin.getDaemon().authorize(player);
 	        new ChatBuilder("SUCCESSFULLY ").color(GREEN).append("authenticated with a backup code. You're being required to setup up your authentication again.").color(AQUA).send(player);
