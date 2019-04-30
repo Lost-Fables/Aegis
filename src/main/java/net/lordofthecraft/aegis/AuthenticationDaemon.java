@@ -34,9 +34,9 @@ public class AuthenticationDaemon {
     public static final String BACKUP_CODES = "Your backup codes. Save these in a secure location!";
     
     private Aegis plugin;
-    private Set<UUID> awaitingAuthentication;
+    private Set<ProxiedPlayer> awaitingAuthentication;
     private Map<UUID, AegisUser> users;
-    private Map<UUID, Queue<Chat>> queuedChat;
+    private Map<ProxiedPlayer, Queue<Chat>> queuedChat;
     @Getter
     private List<String> lowSecurityServers;
 
@@ -49,16 +49,16 @@ public class AuthenticationDaemon {
         lowSecurityServers = plugin.getConfig().getStringList("lowSecurityServer");
     }
 
-    public boolean isAuthenticated(UUID uuid) {
-        return !awaitingAuthentication.contains(uuid);
+    public boolean isAuthenticated(ProxiedPlayer player) {
+        return !awaitingAuthentication.contains(player);
     }
 
-    public boolean isAwaitingAuthentication(UUID uuid) {
-        return awaitingAuthentication.contains(uuid);
+    public boolean isAwaitingAuthentication(ProxiedPlayer player) {
+        return awaitingAuthentication.contains(player);
     }
 
     public void authorize(ProxiedPlayer player) {
-        awaitingAuthentication.remove(player.getUniqueId());
+        awaitingAuthentication.remove(player);
         getUser(player.getUniqueId()).setLastAuthenticated(System.currentTimeMillis());
         player.sendTitle(ProxyServer.getInstance().createTitle().clear());
     }
@@ -81,7 +81,7 @@ public class AuthenticationDaemon {
     }
 
     public void requireAuthentication(ProxiedPlayer player) {
-        awaitingAuthentication.add(player.getUniqueId());
+        awaitingAuthentication.add(player);
     }
 
     public void createAuthentication(ProxiedPlayer player) {
@@ -103,8 +103,8 @@ public class AuthenticationDaemon {
         users.remove(uuid);
     }
 
-    public void removeAwaitingAuthentication(UUID uuid) {
-        awaitingAuthentication.remove(uuid);
+    public void removeAwaitingAuthentication(ProxiedPlayer player) {
+        awaitingAuthentication.remove(player);
     }
 
     public void loadUsers() {
@@ -126,7 +126,7 @@ public class AuthenticationDaemon {
 
     public void setupUser(ProxiedPlayer player) {
         createAuthentication(player);
-        awaitingAuthentication.add(player.getUniqueId());
+        awaitingAuthentication.add(player);
 
         plugin.getProxy().getScheduler().schedule(plugin, () -> sendMap(player), 2, TimeUnit.SECONDS);
         sendBackupCodes(player);
@@ -161,13 +161,13 @@ public class AuthenticationDaemon {
     }
 
     public void queueMessage(ProxiedPlayer player, Chat message) {
-        Queue<Chat> chat = queuedChat.getOrDefault(player.getUniqueId(), new ConcurrentLinkedQueue<>());
+        Queue<Chat> chat = queuedChat.getOrDefault(player, new ConcurrentLinkedQueue<>());
         chat.add(message);
-        queuedChat.put(player.getUniqueId(), chat);
+        queuedChat.put(player, chat);
     }
 
     public void sendQueuedChat(ProxiedPlayer player) {
-        queuedChat.getOrDefault(player.getUniqueId(), new ConcurrentLinkedQueue<>()).forEach(p -> player.unsafe().sendPacket(p));
+        queuedChat.getOrDefault(player, new ConcurrentLinkedQueue<>()).forEach(p -> player.unsafe().sendPacket(p));
     }
 
     public void sendBackupCodes(ProxiedPlayer player) {

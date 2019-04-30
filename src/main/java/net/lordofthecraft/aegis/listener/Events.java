@@ -31,7 +31,7 @@ public class Events implements Listener {
             return;
         }
 
-        if (plugin.getDaemon().isAuthenticated(event.getPlayer().getUniqueId())) {
+        if (plugin.getDaemon().isAuthenticated(event.getPlayer())) {
             return;
         }
 
@@ -78,14 +78,14 @@ public class Events implements Listener {
                     oldestIP = ipEntry;
                 }
             }
-            user.getLastKnownIPs().remove(oldestIP.getKey(), oldestIP.getValue());;
+            user.getLastKnownIPs().remove(oldestIP.getKey(), oldestIP.getValue());
         }
         user.saveConfig();
     }
 
     @EventHandler
     public void logout(PlayerDisconnectEvent event) {
-        plugin.getDaemon().removeAwaitingAuthentication(event.getPlayer().getUniqueId());
+        plugin.getDaemon().removeAwaitingAuthentication(event.getPlayer());
     }
 
     private void sendTitle(ProxiedPlayer player) {

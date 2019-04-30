@@ -23,7 +23,7 @@ public class AuthCommands extends CommandTemplate {
 
     public void invoke(ProxiedPlayer player, int authCode) {
         validate(plugin.getDaemon().hasAuthentication(player.getUniqueId()), "You don't have two factor authentication setup");
-        validate(!plugin.getDaemon().isAuthenticated(player.getUniqueId()), "You're already authenticated");
+        validate(!plugin.getDaemon().isAuthenticated(player), "You're already authenticated");
 
         AegisUser user = plugin.getDaemon().getUser(player.getUniqueId());
         if (plugin.getGAuth().authorize(user.getSecretKey(), authCode)) {
@@ -59,7 +59,7 @@ public class AuthCommands extends CommandTemplate {
     @Cmd(value = "Disable your 2fa", permission = "auth.use")
     public void disable(ProxiedPlayer player) {
 	    validate(plugin.getDaemon().hasAuthentication(player.getUniqueId()), "You don't have two factor authentication setup");
-	    validate(!plugin.getDaemon().isAwaitingAuthentication(player.getUniqueId()), "You can't run that command right now");
+	    validate(!plugin.getDaemon().isAwaitingAuthentication(player), "You can't run that command right now");
 
 	    new ChatStream(player).confirmPrompt().activate((context) -> {
 		    plugin.getDaemon().removeUser(player.getUniqueId());
@@ -71,7 +71,7 @@ public class AuthCommands extends CommandTemplate {
     @Cmd(value = "Disable 2FA for another player", permission = "auth.disable.others")
     public void disable(ProxiedPlayer player, ProxiedPlayer target) {
 	    validate(plugin.getDaemon().hasAuthentication(target.getUniqueId()), target.getName() + " doesn't have two factor authentication setup");
-	    validate(!plugin.getDaemon().isAwaitingAuthentication(player.getUniqueId()), "You can't run that command right now");
+	    validate(!plugin.getDaemon().isAwaitingAuthentication(player), "You can't run that command right now");
 
 	    new ChatStream(player).confirmPrompt().activate((context) -> {
 		    plugin.getDaemon().removeUser(target.getUniqueId());
@@ -83,7 +83,7 @@ public class AuthCommands extends CommandTemplate {
     @Cmd(value = "Recreate your backup codes", permission = "auth.use")
     public void getBackupCodes(ProxiedPlayer player) {
 	    validate(plugin.getDaemon().hasAuthentication(player.getUniqueId()), "You don't have two factor authentication setup");
-	    validate(!plugin.getDaemon().isAwaitingAuthentication(player.getUniqueId()), "You can't run that command right now");
+	    validate(!plugin.getDaemon().isAwaitingAuthentication(player), "You can't run that command right now");
 
 	    plugin.getDaemon().sendBackupCodes(player);
     }
