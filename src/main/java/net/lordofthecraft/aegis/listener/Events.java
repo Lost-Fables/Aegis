@@ -88,6 +88,7 @@ public class Events implements Listener {
         plugin.getDaemon().removeAwaitingAuthentication(event.getPlayer());
         if (plugin.getDaemon().getFirstTimeSetup().contains(event.getPlayer())) {
             plugin.getDaemon().removeUser(event.getPlayer().getUniqueId(), false);
+            plugin.getDaemon().getFirstTimeSetup().remove(event.getPlayer());
         }
     }
 
