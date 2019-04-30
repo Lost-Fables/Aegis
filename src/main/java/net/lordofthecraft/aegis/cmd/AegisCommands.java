@@ -5,6 +5,7 @@ import co.lotc.core.command.CommandTemplate;
 import co.lotc.core.command.annotate.Cmd;
 import net.lordofthecraft.aegis.Aegis;
 import net.lordofthecraft.aegis.AegisUser;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.text.SimpleDateFormat;
@@ -31,9 +32,9 @@ public class AegisCommands extends CommandTemplate {
 	}
 
 	@Cmd("Reload users from disk")
-	public void reloadUsers(ProxiedPlayer player) {
+	public void reloadUsers(CommandSender sender) {
 		plugin.loadConfig();
 		plugin.getDaemon().loadUsers();
-		new ChatBuilder("Users reloaded!").color(AQUA).send(player);
+		new ChatBuilder("Users reloaded!").color(AQUA).send(sender);
 	}
 }
