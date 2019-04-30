@@ -86,6 +86,9 @@ public class Events implements Listener {
     @EventHandler
     public void logout(PlayerDisconnectEvent event) {
         plugin.getDaemon().removeAwaitingAuthentication(event.getPlayer());
+        if (plugin.getDaemon().getFirstTimeSetup().contains(event.getPlayer())) {
+            plugin.getDaemon().removeUser(event.getPlayer().getUniqueId(), false);
+        }
     }
 
     private void sendTitle(ProxiedPlayer player) {

@@ -35,12 +35,6 @@ public class AegisUser {
 
 
         file = new File(Aegis.INSTANCE.getDataFolder() + File.separator + "users", uuid + ".yml");
-        try {
-            file.createNewFile();
-            config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         save();
     }
 
@@ -51,6 +45,16 @@ public class AegisUser {
     }
 
     public void save() {
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+                config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         config.set("uuid", uuid.toString());
         config.set("secretKey", secretKey);
         config.set("scratchCodes", scratchCodes);

@@ -30,11 +30,13 @@ import static net.md_5.bungee.api.ChatColor.AQUA;
 import static net.md_5.bungee.api.ChatColor.GOLD;
 
 public class AuthenticationDaemon {
-    private static final int AUTHENTHICATION_MAP_ID = 1337;
+    private static final int AUTHENTICATION_MAP_ID = 1337;
     public static final String BACKUP_CODES = "Your backup codes. Save these in a secure location!";
     
     private Aegis plugin;
     private Set<ProxiedPlayer> awaitingAuthentication;
+    @Getter
+    private Set<ProxiedPlayer> firstTimeSetup;
     private Map<UUID, AegisUser> users;
     private Map<ProxiedPlayer, Queue<Chat>> queuedChat;
     @Getter
@@ -45,6 +47,7 @@ public class AuthenticationDaemon {
         this.plugin = plugin;
         loadUsers();
         awaitingAuthentication = ConcurrentHashMap.newKeySet();
+        firstTimeSetup = ConcurrentHashMap.newKeySet();
 
         lowSecurityServers = plugin.getConfig().getStringList("lowSecurityServer");
     }
@@ -59,7 +62,10 @@ public class AuthenticationDaemon {
 
     public void authorize(ProxiedPlayer player) {
         awaitingAuthentication.remove(player);
-        getUser(player.getUniqueId()).setLastAuthenticated(System.currentTimeMillis());
+        firstTimeSetup.remove(player);
+        AegisUser user = getUser(player.getUniqueId());
+        user.setLastAuthenticated(System.currentTimeMillis());
+        user.save();
         player.sendTitle(ProxyServer.getInstance().createTitle().clear());
     }
 
@@ -98,8 +104,10 @@ public class AuthenticationDaemon {
         return users.containsKey(uuid);
     }
 
-    public void removeUser(UUID uuid) {
-        users.get(uuid).delete();
+    public void removeUser(UUID uuid, boolean deleteFile) {
+        if (deleteFile) {
+            users.get(uuid).delete();
+        }
         users.remove(uuid);
     }
 
@@ -130,6 +138,7 @@ public class AuthenticationDaemon {
 
         plugin.getProxy().getScheduler().schedule(plugin, () -> sendMap(player), 2, TimeUnit.SECONDS);
         sendBackupCodes(player);
+        firstTimeSetup.add(player);
     }
 
     private byte[] getQRCode(ProxiedPlayer pp) {
@@ -141,7 +150,7 @@ public class AuthenticationDaemon {
     private void sendMap(ProxiedPlayer player) {
         
         byte[] data = getQRCode(player);
-        MapData md = new MapData(AUTHENTHICATION_MAP_ID, (byte) 0, false, new MapData.Icon[0],
+        MapData md = new MapData(AUTHENTICATION_MAP_ID, (byte) 0, false, new MapData.Icon[0],
                 128, 128, 0, 0, data);
         player.unsafe().sendPacket(md);
 
@@ -149,7 +158,7 @@ public class AuthenticationDaemon {
 
         final ItemStack map = new ItemStack(ItemType.FILLED_MAP);
         CompoundTag compoundTag = (CompoundTag) map.getNBTTag();
-        compoundTag.getValue().put("tag", new IntTag("map", AUTHENTHICATION_MAP_ID));
+        compoundTag.getValue().put("tag", new IntTag("map", AUTHENTICATION_MAP_ID));
         map.setNBTTag(compoundTag);
         inventory.setItem(36, map);
         inventory.changeHeldItem((short) 0);

@@ -62,7 +62,7 @@ public class AuthCommands extends CommandTemplate {
 	    validate(!plugin.getDaemon().isAwaitingAuthentication(player), "You can't run that command right now");
 
 	    new ChatStream(player).confirmPrompt().activate((context) -> {
-		    plugin.getDaemon().removeUser(player.getUniqueId());
+		    plugin.getDaemon().removeUser(player.getUniqueId(), true);
 		    player.disconnect(new TextComponent("2FA removed! Please relog."));
 	    });
 
@@ -74,7 +74,7 @@ public class AuthCommands extends CommandTemplate {
 	    validate(!plugin.getDaemon().isAwaitingAuthentication(player), "You can't run that command right now");
 
 	    new ChatStream(player).confirmPrompt().activate((context) -> {
-		    plugin.getDaemon().removeUser(target.getUniqueId());
+		    plugin.getDaemon().removeUser(target.getUniqueId(), true);
 		    target.disconnect(new ComponentBuilder("2FA removed! Please relog.").create());
 		    player.sendMessage(new ComponentBuilder(target.getName()).color(GOLD).append(" has had their 2FA removed").color(AQUA).create());
 	    });
