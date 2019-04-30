@@ -7,8 +7,7 @@ import de.exceptionflug.protocolize.api.protocol.Stream;
 import net.lordofthecraft.aegis.Aegis;
 import net.md_5.bungee.protocol.packet.Chat;
 
-import static net.md_5.bungee.api.ChatColor.GOLD;
-import static net.md_5.bungee.api.ChatColor.RED;
+import static net.md_5.bungee.api.ChatColor.*;
 
 public class ChatReceiveListener extends PacketAdapter<Chat> {
 
@@ -23,7 +22,7 @@ public class ChatReceiveListener extends PacketAdapter<Chat> {
 	public void receive(PacketReceiveEvent<Chat> event) {
 		if (plugin.getDaemon().isAwaitingAuthentication(event.getPlayer().getUniqueId())) {
 			if (!event.getPacket().getMessage().split(" ")[0].equalsIgnoreCase("/auth")) {
-				new ChatBuilder("Error: Use ").color(RED).append("/auth").color(GOLD).append(" to authenticate").color(RED).send(event.getPlayer());
+				new ChatBuilder("Error: Use ").color(RED).append("/auth").color(GOLD).append(" to authenticate").color(WHITE).send(event.getPlayer());
 				event.setCancelled(true);
 			}
 		}

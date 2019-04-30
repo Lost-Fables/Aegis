@@ -39,6 +39,8 @@ public class AuthCommands extends CommandTemplate {
 	        	new ChatBuilder("Eror: ").color(RED).append("No backup codes were found for you. Regenerating them now").color(WHITE).send(player);
 		        plugin.getDaemon().sendBackupCodes(player);
 	        }
+
+	        user.getLastKnownIPs().put(player.getAddress().getAddress().getHostAddress(), System.currentTimeMillis()); // They've authenticated so we want to record down their IP
         } else if (user.getScratchCodes().contains(authCode)) {
             plugin.getDaemon().authorize(player);
 	        new ChatBuilder("SUCCESSFULLY ").color(GREEN).append("authenticated with a backup code. You're being required to setup up your authentication again.").color(AQUA).send(player);

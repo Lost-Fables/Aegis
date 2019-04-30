@@ -67,8 +67,6 @@ public class Events implements Listener {
             sendTitle(player);
         }
 
-        user.getLastKnownIPs().put(player.getAddress().getAddress().getHostAddress(), System.currentTimeMillis());
-
 
         // This is terrible code and I'm sorry. I blame Fireheart
 
