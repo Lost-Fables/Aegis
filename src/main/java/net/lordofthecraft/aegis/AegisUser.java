@@ -29,13 +29,12 @@ public class AegisUser {
         this.uuid = player.getUniqueId();
         this.secretKey = secretKey;
         this.scratchCodes = scratchCodes;
-        lastAuthenticated = System.currentTimeMillis();
+        lastAuthenticated = 0;
         lastKnownIPs = new ConcurrentHashMap<>();
         lastKnownIPs.put(player.getAddress().getAddress().getHostAddress(), System.currentTimeMillis());
 
 
         file = new File(Aegis.INSTANCE.getDataFolder() + File.separator + "users", uuid + ".yml");
-        save();
     }
 
     public AegisUser(Configuration config) {
@@ -45,7 +44,6 @@ public class AegisUser {
     }
 
     public void save() {
-
         if (!file.exists()) {
             try {
                 file.createNewFile();
