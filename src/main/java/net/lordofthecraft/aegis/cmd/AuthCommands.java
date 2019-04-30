@@ -9,6 +9,7 @@ import net.lordofthecraft.aegis.Aegis;
 import net.lordofthecraft.aegis.AegisUser;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import static net.md_5.bungee.api.ChatColor.*;
@@ -33,6 +34,11 @@ public class AuthCommands extends CommandTemplate {
 
 	        InventoryManager.getInventory(player.getUniqueId()).removeItem(36);
 	        InventoryManager.getInventory(player.getUniqueId()).update();
+
+	        if (user.getScratchCodes().isEmpty()) { // This should only happen due to exporting data from Cerberus
+	        	new ChatBuilder("Eror: ").color(RED).append("No backup codes were found for you. Regenerating them now").color(WHITE).send(player);
+		        plugin.getDaemon().sendBackupCodes(player);
+	        }
         } else if (user.getScratchCodes().contains(authCode)) {
             plugin.getDaemon().authorize(player);
 	        new ChatBuilder("SUCCESSFULLY ").color(GREEN).append("authenticated with a backup code. You're being required to setup up your authentication again.").color(AQUA).send(player);
@@ -55,7 +61,7 @@ public class AuthCommands extends CommandTemplate {
 
 	    new ChatStream(player).confirmPrompt().activate((context) -> {
 		    plugin.getDaemon().removeUser(player.getUniqueId());
-		    player.disconnect(new ComponentBuilder("2FA removed! Please relog.").create());
+		    player.disconnect(new TextComponent("2FA removed! Please relog."));
 	    });
 
     }
