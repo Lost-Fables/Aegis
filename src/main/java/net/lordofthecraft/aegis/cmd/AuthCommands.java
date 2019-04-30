@@ -55,7 +55,7 @@ public class AuthCommands extends CommandTemplate {
         }
     }
 
-    @Cmd(value = "Setup 2fa", permission = "auth.use")
+    @Cmd(value = "Setup 2fa", permission = "auth.setup")
     public void setup(ProxiedPlayer player) {
         validate(!plugin.getDaemon().hasAuthentication(player.getUniqueId()), "You already have two factor authentication setup. Do '/auth disable' to remove it");
         new ChatBuilder("Two factor authentication is a second layer of security for your account. Instead of only requiring  just your minecraft account's password, it also requires a code generated from an app on your phone." +
@@ -68,7 +68,7 @@ public class AuthCommands extends CommandTemplate {
         plugin.getDaemon().setupUser(player);
     }
 
-    @Cmd(value = "Disable your 2fa", permission = "auth.use")
+    @Cmd(value = "Disable your 2fa")
     public void disable(ProxiedPlayer player) {
 	    validate(plugin.getDaemon().hasAuthentication(player.getUniqueId()), "You don't have two factor authentication setup");
 	    validate(!plugin.getDaemon().isAwaitingAuthentication(player), "You can't run that command right now");
@@ -92,7 +92,7 @@ public class AuthCommands extends CommandTemplate {
 	    });
     }
 
-    @Cmd(value = "Recreate your backup codes", permission = "auth.use")
+    @Cmd(value = "Recreate your backup codes")
     public void getBackupCodes(ProxiedPlayer player) {
 	    validate(plugin.getDaemon().hasAuthentication(player.getUniqueId()), "You don't have two factor authentication setup");
 	    validate(!plugin.getDaemon().isAwaitingAuthentication(player), "You can't run that command right now");
