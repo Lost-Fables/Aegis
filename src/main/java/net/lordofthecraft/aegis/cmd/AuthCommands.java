@@ -27,6 +27,11 @@ public class AuthCommands extends CommandTemplate {
 
         AegisUser user = plugin.getDaemon().getUser(player.getUniqueId());
         if (plugin.getGAuth().authorize(user.getSecretKey(), authCode)) {
+	        if (plugin.getDaemon().getFirstTimeSetup().contains(player)) {
+		        user.save();
+		        plugin.getDaemon().getFirstTimeSetup().remove(player);
+	        }
+
         	plugin.getDaemon().authorize(player);
         	plugin.getDaemon().sendQueuedChat(player);
 	        new ChatBuilder("SUCCESSFULLY ").color(GREEN).append("authenticated!").color(AQUA).send(player);
@@ -36,7 +41,7 @@ public class AuthCommands extends CommandTemplate {
 	        InventoryManager.getInventory(player.getUniqueId()).update();
 
 	        if (user.getScratchCodes().isEmpty()) { // This should only happen due to exporting data from Cerberus
-	        	new ChatBuilder("Eror: ").color(RED).append("No backup codes were found for you. Regenerating them now").color(WHITE).send(player);
+	        	new ChatBuilder("Error: ").color(RED).append("No backup codes were found for you. Regenerating them now").color(WHITE).send(player);
 		        plugin.getDaemon().sendBackupCodes(player);
 	        }
 
