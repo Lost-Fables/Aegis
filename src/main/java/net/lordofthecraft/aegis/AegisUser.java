@@ -57,6 +57,7 @@ public class AegisUser {
         config.set("secretKey", secretKey);
         config.set("scratchCodes", scratchCodes);
         config.set("lastAuthenticated", lastAuthenticated);
+        config.set("ip", null);
         for (Map.Entry<String, Long> entry : lastKnownIPs.entrySet()) {
             config.set("ip." + entry.getKey().replaceAll("\\.", "-"), entry.getValue());
         }

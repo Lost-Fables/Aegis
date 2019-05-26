@@ -14,6 +14,8 @@ import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +26,7 @@ public class Events implements Listener {
     public Events(Aegis plugin) {
         this.plugin = plugin;
     }
+
 
     @EventHandler
     public void onProxyChange(ServerConnectEvent event) {
@@ -52,6 +55,7 @@ public class Events implements Listener {
     }
 
 
+
     @EventHandler
     public void onLogin(PostLoginEvent event) {
         ProxiedPlayer player = event.getPlayer();
@@ -69,18 +73,16 @@ public class Events implements Listener {
 
 
         // This is terrible code and I'm sorry. I blame Fireheart
-
-        Map.Entry<String, Long> oldestIP = null;
+        boolean requiresSave = false;
         while (user.getLastKnownIPs().size() > plugin.getConfig().getInt("savedIPs", 5)) {
-            for (Map.Entry<String, Long> ipEntry : user.getLastKnownIPs().entrySet()) {
+            Comparator<Map.Entry<String, Long>> comparator = Comparator.comparing(Map.Entry::getValue);
+            user.getLastKnownIPs().remove(Collections.max(user.getLastKnownIPs().entrySet(), comparator).getKey());
 
-                if (oldestIP == null || ipEntry.getValue() < oldestIP.getValue()) {
-                    oldestIP = ipEntry;
-                }
-            }
-            user.getLastKnownIPs().remove(oldestIP.getKey(), oldestIP.getValue());
+            requiresSave = true;
         }
-        user.save();
+        if (requiresSave) {
+            user.save();
+        }
     }
 
     @EventHandler
