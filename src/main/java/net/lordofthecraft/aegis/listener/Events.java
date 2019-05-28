@@ -76,7 +76,7 @@ public class Events implements Listener {
         boolean requiresSave = false;
         while (user.getLastKnownIPs().size() > plugin.getConfig().getInt("savedIPs", 5)) {
             Comparator<Map.Entry<String, Long>> comparator = Comparator.comparing(Map.Entry::getValue);
-            user.getLastKnownIPs().remove(Collections.max(user.getLastKnownIPs().entrySet(), comparator).getKey());
+            user.getLastKnownIPs().remove(Collections.min(user.getLastKnownIPs().entrySet(), comparator).getKey());
 
             requiresSave = true;
         }
