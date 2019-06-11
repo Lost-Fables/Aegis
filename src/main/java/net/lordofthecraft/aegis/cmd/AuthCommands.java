@@ -58,13 +58,6 @@ public class AuthCommands extends CommandTemplate {
     @Cmd(value = "Setup 2fa", permission = "auth.setup")
     public void setup(ProxiedPlayer player) {
         validate(!plugin.getDaemon().hasAuthentication(player.getUniqueId()), "You already have two factor authentication setup. Do '/auth disable' to remove it");
-        new ChatBuilder("Two factor authentication is a second layer of security for your account. Instead of only requiring  just your minecraft account's password, it also requires a code generated from an app on your phone." +
-		        "If you ever lose access to your phone, there are backup codes that you can use to reset your authentication. If you lose both your phone and your backup codes, contact the administration to verify your identity.")
-        .color(GOLD).send(player);
-        new ChatBuilder("Download a 2fa app on your phone and scan the QR code on the map. Here are some recommended apps").color(GOLD).send(player);
-        for (String key : plugin.getConfig().getSection("suggestedApps").getKeys()) {
-        	new ChatBuilder("[").append(key).append("]").color(AQUA).event(new ClickEvent(ClickEvent.Action.OPEN_URL, plugin.getConfig().getString("suggestedApps." + key)));
-        }
         plugin.getDaemon().setupUser(player);
     }
 

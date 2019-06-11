@@ -1,5 +1,6 @@
 package net.lordofthecraft.aegis.listener;
 
+import co.lotc.core.bungee.util.ChatBuilder;
 import net.lordofthecraft.aegis.Aegis;
 import net.lordofthecraft.aegis.AegisUser;
 import net.md_5.bungee.api.ChatColor;
@@ -61,12 +62,14 @@ public class Events implements Listener {
         ProxiedPlayer player = event.getPlayer();
         if (!plugin.getDaemon().hasAuthentication(player.getUniqueId())) {
             if (player.hasPermission("auth.required")) {
+                new ChatBuilder("Your permissions require you to setup Two Factor Authentication.").send(player);
                 plugin.getDaemon().setupUser(player);
             }
             return;
         }
         AegisUser user = plugin.getDaemon().getUser(player.getUniqueId());
         if (System.currentTimeMillis() - user.getLastAuthenticated() > TimeUnit.DAYS.toMillis(plugin.getConfig().getInt("daysBetweenAuthenticating", 7)) || !user.isRecentIP(player.getAddress().getAddress().getHostAddress())) {
+            new ChatBuilder("You are being required to authenticate yourself. Open your 2FA app and find your 6 digit code. Authenticate using /auth [auth code]. Do not use spaces.").color(ChatColor.AQUA).send(player);
             plugin.getDaemon().requireAuthentication(player);
             sendTitle(player);
         }
