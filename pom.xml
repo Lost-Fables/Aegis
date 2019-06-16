@@ -13,7 +13,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.protocolize.version>1.3.2-SNAPSHOT</project.protocolize.version>
+    <project.protocolize.version>1.4.3-SNAPSHOT</project.protocolize.version>
   </properties>
 
   <build>
@@ -27,9 +27,6 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
-          <compilerArgs>
-            <arg>-parameters</arg>
-          </compilerArgs>
         </configuration>
       </plugin>
       <plugin>
@@ -65,10 +62,6 @@
   </build>
 
   <repositories>
-    <repository>
-      <id>aikar</id>
-      <url>https://repo.aikar.co/content/groups/aikar/</url>
-    </repository>
     <repository>
       <id>exceptionflug</id>
       <url>http://mvn.exceptionflug.de/repository/exceptionflug-public/</url>

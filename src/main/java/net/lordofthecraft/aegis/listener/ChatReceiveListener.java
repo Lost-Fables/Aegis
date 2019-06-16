@@ -14,7 +14,7 @@ public class ChatReceiveListener extends PacketAdapter<Chat> {
 	private Aegis plugin;
 
 	public ChatReceiveListener(Aegis plugin) {
-		super(Stream.DOWNSTREAM, Chat.class);
+		super(Stream.UPSTREAM, Chat.class);
 		this.plugin = plugin;
 	}
 
