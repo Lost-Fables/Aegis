@@ -1,4 +1,4 @@
-package net.lordofthecraft.aegis;
+package net.lordofthecraft.aegis.packet;
 
 import de.exceptionflug.protocolize.api.protocol.AbstractPacket;
 import io.netty.buffer.ByteBuf;
@@ -16,22 +16,23 @@ import net.md_5.bungee.chat.ComponentSerializer;
 @EqualsAndHashCode(callSuper = false)
 public class MapData extends AbstractPacket {
 
-  int mapID;
-  byte scale;
-  boolean trackingPosition;
+  int mapID; //  Map ID of the map being modified
+  byte scale; //  From 0 for a fully zoomed-in map (1 block per pixel) to 4 for a fully zoomed-out map (16 blocks per pixel)
+  boolean trackingPosition; //  Specifies whether player and item frame icons are shown
+  boolean locked; // True if the map has been locked in a cartography table
   Icon[] icons;
 
-  int columns;
-  int rows;
-  int xOffset;
-  int zOffset;
+  int columns; // Number of columns updated
+  int rows; // Only if Columns is more than 0; number of rows updated
+  int xOffset; //  Only if Columns is more than 0; x offset of the westernmost column
+  int zOffset; //  Only if Columns is more than 0; z offset of the northernmost row
   byte[] mapData;
 
   public class Icon {
     int type;
-    byte x;
-    byte z;
-    byte direction;
+    byte x; // Map coordinates: -128 for furthest left, +127 for furthest right
+    byte z; // Map coordinates: -128 for highest, +127 for lowest
+    byte direction; // 0-15
     boolean hasDisplayName;
     String displayName;
   }
@@ -61,6 +62,7 @@ public class MapData extends AbstractPacket {
     mapID = readVarInt(buf);
     scale = buf.readByte();
     trackingPosition = buf.readBoolean();
+    locked = buf.readBoolean();
 
     int howManyIcons = readVarInt(buf);
     this.icons = new Icon[howManyIcons];
@@ -102,6 +104,7 @@ public class MapData extends AbstractPacket {
     writeVarInt(mapID, buf);
     buf.writeByte(scale);
     buf.writeBoolean(trackingPosition);
+    buf.writeBoolean(locked);
     writeVarInt(icons.length, buf);
 
     for(Icon icon : icons) {

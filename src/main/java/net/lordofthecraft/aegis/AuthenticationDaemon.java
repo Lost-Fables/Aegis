@@ -10,6 +10,7 @@ import de.exceptionflug.protocolize.items.ItemStack;
 import de.exceptionflug.protocolize.items.ItemType;
 import de.exceptionflug.protocolize.items.PlayerInventory;
 import lombok.Getter;
+import net.lordofthecraft.aegis.packet.MapData;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -159,7 +160,7 @@ public class AuthenticationDaemon {
     private void sendMap(ProxiedPlayer player) {
         
         byte[] data = getQRCode(player);
-        MapData md = new MapData(AUTHENTICATION_MAP_ID, (byte) 0, false, new MapData.Icon[0],
+        MapData md = new MapData(AUTHENTICATION_MAP_ID, (byte) 0, false, false, new MapData.Icon[0],
                 128, 128, 0, 0, data);
         player.unsafe().sendPacket(md);
 
