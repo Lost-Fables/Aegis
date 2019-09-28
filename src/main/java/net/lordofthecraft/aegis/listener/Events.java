@@ -92,7 +92,7 @@ public class Events implements Listener {
     public void logout(PlayerDisconnectEvent event) {
         plugin.getDaemon().removeAwaitingAuthentication(event.getPlayer());
         if (plugin.getDaemon().getFirstTimeSetup().contains(event.getPlayer())) {
-            plugin.getDaemon().removeUser(event.getPlayer().getUniqueId(), false);
+            plugin.getDaemon().removeUser(event.getPlayer().getUniqueId(), true);
             plugin.getDaemon().getFirstTimeSetup().remove(event.getPlayer());
         }
     }
