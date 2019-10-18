@@ -52,9 +52,6 @@ public class AuthenticationDaemon {
         loadUsers();
         awaitingAuthentication = ConcurrentHashMap.newKeySet();
         firstTimeSetup = ConcurrentHashMap.newKeySet();
-    }
-
-    public void loadConfig() {
         lowSecurityServers = plugin.getConfig().getStringList("lowSecurityServers");
         pendingServers = plugin.getConfig().getStringList("pendingServers");
     }
