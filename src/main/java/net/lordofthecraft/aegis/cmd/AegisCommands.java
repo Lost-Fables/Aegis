@@ -48,5 +48,7 @@ public class AegisCommands extends CommandTemplate {
 	public void reload(CommandSender sender) {
 		reloadUsers(sender);
 		reloadConfig(sender);
+		plugin.getDaemon().setLowSecurityServers(plugin.getConfig().getStringList("lowSecurityServers"));
+		plugin.getDaemon().setPendingServers(plugin.getConfig().getStringList("pendingServers"));
 	}
 }

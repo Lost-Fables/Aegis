@@ -10,6 +10,7 @@ import de.exceptionflug.protocolize.items.ItemStack;
 import de.exceptionflug.protocolize.items.ItemType;
 import de.exceptionflug.protocolize.items.PlayerInventory;
 import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -40,8 +41,10 @@ public class AuthenticationDaemon {
     private Set<ProxiedPlayer> firstTimeSetup;
     private Map<UUID, AegisUser> users;
     private Map<ProxiedPlayer, Queue<Chat>> queuedChat;
-    @Getter
+    @Setter
     private List<String> lowSecurityServers;
+    @Setter
+    private List<String> pendingServers;
 
     public AuthenticationDaemon(Aegis plugin) {
         queuedChat = new ConcurrentHashMap<>();
@@ -49,8 +52,11 @@ public class AuthenticationDaemon {
         loadUsers();
         awaitingAuthentication = ConcurrentHashMap.newKeySet();
         firstTimeSetup = ConcurrentHashMap.newKeySet();
+    }
 
-        lowSecurityServers = plugin.getConfig().getStringList("lowSecurityServer");
+    public void loadConfig() {
+        lowSecurityServers = plugin.getConfig().getStringList("lowSecurityServers");
+        pendingServers = plugin.getConfig().getStringList("pendingServers");
     }
 
     public boolean isAuthenticated(ProxiedPlayer player) {
@@ -70,9 +76,9 @@ public class AuthenticationDaemon {
         player.sendTitle(ProxyServer.getInstance().createTitle().clear());
     }
 
-    public ServerInfo getLowSecurityServer() {
+    public ServerInfo getPendingServer() {
         for (Map.Entry<String, ServerInfo> servers : plugin.getProxy().getServers().entrySet()) {
-            if (lowSecurityServers.contains(servers.getKey())) {
+            if (pendingServers.contains(servers.getKey())) {
                 return servers.getValue();
             }
         }
@@ -80,7 +86,7 @@ public class AuthenticationDaemon {
     }
 
     public boolean isLowSecurityServer(String name) {
-        return lowSecurityServers.contains(name);
+        return lowSecurityServers.contains(name) || pendingServers.contains(name);
     }
 
     public boolean isLowSecurityServer(ServerInfo server) {
