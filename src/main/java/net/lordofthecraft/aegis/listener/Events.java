@@ -41,8 +41,8 @@ public class Events implements Listener {
 
         sendTitle(event.getPlayer());
 
-        ServerInfo lowSecurityServer = plugin.getDaemon().getLowSecurityServer();
-        if (lowSecurityServer == null) {
+        ServerInfo pendingServer = plugin.getDaemon().getPendingServer();
+        if (pendingServer == null) {
             plugin.getLogger().warning("None of the low security servers are online!");
             return;
         }
@@ -51,7 +51,7 @@ public class Events implements Listener {
             event.setCancelled(true);
             return;
         }
-        event.setTarget(lowSecurityServer);
+        event.setTarget(pendingServer);
 
     }
 

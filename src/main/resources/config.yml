@@ -1,8 +1,12 @@
-lowSecurityServer:
+# Where players will be sent while pending authentication
+pendingServers:
   - limbo
   - lobby1
   - lobby2
   - lobby3
+# Servers that don't require authentication
+lowSecurityServers:
+  - dev
 
 # Amount of IPs to save and check against
 savedIPs: 5
